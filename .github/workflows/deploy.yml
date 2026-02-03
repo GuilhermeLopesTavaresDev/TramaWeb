@@ -7,7 +7,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to VPS
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install and Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
+      
+      # NOVO: Enviar arquivos buildados para o servidor
+      - name: Deploy Frontend Build to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 31.97.166.219
+          username: root
+          key: ${{ secrets.SERVERSSHKEY }}
+          port: 22
+          source: "frontend/.next,frontend/public,frontend/package.json,frontend/next.config.js"
+          target: "/var/www/tramaweb/"
+          strip_components: 0
+      
+      - name: Deploy Backend and Restart Services
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 31.97.166.219
@@ -15,21 +44,18 @@ jobs:
           key: ${{ secrets.SERVERSSHKEY }}
           port: 22
           script: |
-            # Atualiza o código
             cd /var/www/tramaweb
             git pull origin main
             
-            # FRONTEND - Build com Node 20
-            cd frontend
+            # Backend
+            cd backend
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 20 || nvm install 20
-            
-            npm install
-            npm run build
-            pm2 restart tramaweb-frontend || pm2 start npm --name "tramaweb-frontend" -- start
-            
-            # BACKEND - Reinstala e reinicia
-            cd ../backend
             npm install
             pm2 restart tramaweb-backend
+            
+            # Frontend (só instalar dependências de produção)
+            cd ../frontend
+            npm install --production
+            pm2 restart tramaweb-frontend || pm2 start npm --name "tramaweb-frontend" -- start
