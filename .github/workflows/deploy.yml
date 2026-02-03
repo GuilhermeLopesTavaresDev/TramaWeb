@@ -12,7 +12,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          node-version: 20
+          cache: 'npm'
+          
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
