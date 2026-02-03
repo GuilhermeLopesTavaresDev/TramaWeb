@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Clube do Livro - TramaWeb
 
 Este projeto é um site de clube do livro composto por um Frontend em Next.js e um Backend em Node.js.
@@ -60,3 +61,6 @@ Escolha `[S] Sim` quando solicitado. Isso permitirá que o `npm` e o `npx` funci
 ## Contribuição
 
 Mantenha o código organizado e siga o padrão de commits.
+=======
+# TramaWeb
+>>>>>>> 5d40c09ad5192d1ab85ef6023b0ff3ac7d0c805b
