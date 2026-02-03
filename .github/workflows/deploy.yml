@@ -1,0 +1,53 @@
+name: Deploy Tramaweb
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'  # Versão EXATA para evitar cache
+          # NÃO COLOQUE 'cache: npm' aqui!
+      
+      - name: Verify Node Version
+        run: |
+          echo "Node version:"
+          node -v
+          echo "NPM version:"
+          npm -v
+          which node
+      
+      - name: Install and Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm ci  # Use 'ci' ao invés de 'install' para instalação limpa
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
+      
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 31.97.166.219
+          username: root
+          key: ${{ secrets.SERVERSSHKEY }}
+          port: 22
+          script: |
+            cd /var/www/tramaweb
+            git pull origin main
+            
+            cd backend
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use 20 || nvm install 20
+            
+            npm install
+            pm2 restart tramaweb-backend
