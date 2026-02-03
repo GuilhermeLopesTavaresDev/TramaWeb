@@ -14,6 +14,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'  # Adicione isso
+      
+      - name: Check Node Version
+        run: node -v
       
       - name: Install and Build Frontend
         working-directory: ./frontend
@@ -24,19 +29,7 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
       
-      # NOVO: Enviar arquivos buildados para o servidor
-      - name: Deploy Frontend Build to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: 31.97.166.219
-          username: root
-          key: ${{ secrets.SERVERSSHKEY }}
-          port: 22
-          source: "frontend/.next,frontend/public,frontend/package.json,frontend/next.config.js"
-          target: "/var/www/tramaweb/"
-          strip_components: 0
-      
-      - name: Deploy Backend and Restart Services
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 31.97.166.219
@@ -47,15 +40,10 @@ jobs:
             cd /var/www/tramaweb
             git pull origin main
             
-            # Backend
             cd backend
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 20 || nvm install 20
+            
             npm install
             pm2 restart tramaweb-backend
-            
-            # Frontend (só instalar dependências de produção)
-            cd ../frontend
-            npm install --production
-            pm2 restart tramaweb-frontend || pm2 start npm --name "tramaweb-frontend" -- start
