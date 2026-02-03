@@ -2,38 +2,35 @@ name: Deploy Tramaweb
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # A MÁGICA É AQUI: Rodamos tudo dentro de um container oficial Node 20
+    # Isso ignora o sistema operacional padrão e garante Node 20.
+    container: node:20-bookworm
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --- AQUI ESTA A CORREÇÃO ---
-      # Removemos qualquer config de cache.
-      # Isso obriga o sistema a baixar o Node 20 fresco.
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      # --- VERIFICAÇÃO ---
-      # Isso vai imprimir a versão no log. Se aparecer v18 aqui, o Github está bugado.
-      # Mas deve aparecer v20.
-      - name: Check Node Version
-        run: node -v
+      # Não precisamos de 'setup-node' porque o container JÁ É Node 20
 
       - name: Build Frontend
         working-directory: ./frontend
         run: |
-          npm install
+          echo "Versão do Node Atual:"
+          node -v
+          # npm ci é mais seguro e rápido para CI/CD que npm install
+          npm ci
           npm run build
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
+          # Se o Next reclamar de cache, descomente a linha abaixo:
+          # CI: true
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -45,6 +42,7 @@ jobs:
           script: |
             cd /var/www/tramaweb
             git pull origin main
+            
             cd backend
             npm install
             pm2 restart tramaweb-backend
