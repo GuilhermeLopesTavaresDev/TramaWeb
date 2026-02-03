@@ -1,37 +1,12 @@
 name: Deploy Tramaweb
-
 on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # --- ATUALIZAÇÃO DO 18 PARA O 20 AQUI ---
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      # ----------------------------------------
-
-      - name: Check Node Version
-        run: node -v  # Deve mostrar v20.x.x
-
-      - name: Install and Build Frontend
-        working-directory: ./frontend
-        run: |
-          npm install
-          npm run build
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
-
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -44,13 +19,17 @@ jobs:
             cd /var/www/tramaweb
             git pull origin main
             
-            # Instala dependências e reinicia o backend
-            cd backend
-            
-            # Garante que o SERVIDOR também use Node 20 (se usar NVM)
+            # FRONTEND - Build com Node 20
+            cd frontend
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 20 || nvm install 20
             
+            npm install
+            npm run build
+            pm2 restart tramaweb-frontend || pm2 start npm --name "tramaweb-frontend" -- start
+            
+            # BACKEND - Reinstala e reinicia
+            cd ../backend
             npm install
             pm2 restart tramaweb-backend
