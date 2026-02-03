@@ -2,8 +2,7 @@ name: Deploy Tramaweb
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
 
 jobs:
   deploy:
@@ -13,19 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # PASSO CRÍTICO: Configura Node 20 ANTES de tentar qualquer build
-      - name: Force Node.js 20
+      # --- AQUI ESTA A CORREÇÃO ---
+      # Removemos qualquer config de cache.
+      # Isso obriga o sistema a baixar o Node 20 fresco.
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: '' # Desabilitado para evitar falhas de "lock file"
 
-      # Verificação para garantir que o Node 20 está ativo
+      # --- VERIFICAÇÃO ---
+      # Isso vai imprimir a versão no log. Se aparecer v18 aqui, o Github está bugado.
+      # Mas deve aparecer v20.
       - name: Check Node Version
         run: node -v
 
-      # Build do Frontend (Agora usará o Node 20 carregado acima)
-      - name: Install and Build Frontend
+      - name: Build Frontend
         working-directory: ./frontend
         run: |
           npm install
@@ -34,7 +35,6 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
 
-      # Deploy no Servidor via SSH
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -43,18 +43,8 @@ jobs:
           key: ${{ secrets.SERVERSSHKEY }}
           port: 22
           script: |
-            # Atualiza repositório
             cd /var/www/tramaweb
             git pull origin main
-            
-            # Backend
             cd backend
             npm install
             pm2 restart tramaweb-backend
-            
-            # ATENÇÃO: Se o seu frontend roda no servidor, 
-            # você provavelmente precisa buildar ele lá também:
-            # cd ../frontend
-            # npm install
-            # npm run build
-            # pm2 restart tramaweb-frontend
