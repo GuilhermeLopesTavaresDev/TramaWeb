@@ -10,26 +10,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      # LIMPA O CACHE ANTIGO
-      - name: Clear npm cache
-        run: npm cache clean --force
-      
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          # NÃO use cache temporariamente para garantir que funcione
-          # cache: 'npm'
+          node-version: '20.17.0'  # Versão EXATA para evitar cache
+          # NÃO COLOQUE 'cache: npm' aqui!
       
       - name: Verify Node Version
         run: |
+          echo "Node version:"
           node -v
+          echo "NPM version:"
           npm -v
+          which node
       
       - name: Install and Build Frontend
         working-directory: ./frontend
         run: |
-          npm install
+          npm ci  # Use 'ci' ao invés de 'install' para instalação limpa
           npm run build
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
