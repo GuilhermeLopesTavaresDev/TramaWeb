@@ -1,4 +1,4 @@
-name: Deploy Final Tramaweb
+name: Deploy Tramaweb
 
 on:
   push:
@@ -6,39 +6,33 @@ on:
       - main
 
 jobs:
-  # Roda tudo dentro de um Container Docker Node 20 oficial.
-  # Isso ignora qualquer configuração da máquina virtual do GitHub.
-  deploy-container-job:
+  deploy:
     runs-on: ubuntu-latest
-    container: node:20-bookworm
 
     steps:
-      - name: Checkout do Codigo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verificar Versao do Node (Tem que ser v20)
-        run: node -v
+      # --- ATUALIZAÇÃO DO 18 PARA O 20 AQUI ---
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # ----------------------------------------
 
-      - name: Instalar e Buildar Frontend
+      - name: Check Node Version
+        run: node -v  # Deve mostrar v20.x.x
+
+      - name: Install and Build Frontend
         working-directory: ./frontend
         run: |
-          # npm ci é mais seguro para deploy que npm install
-          npm ci
+          npm install
           npm run build
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
-          # Ignora checagem de tipos para garantir que o build termine
-          NEXT_TELEMETRY_DISABLED: 1
 
-      # Como estamos num container, precisamos instalar o cliente SSH/Git
-      # antes de chamar a action de deploy, ou usar uma action compatível.
-      # Para simplificar e evitar erro de container-in-container,
-      # vamos usar um comando SSH direto ou garantir que a action funcione.
-      
-      - name: Deploy via SSH
-        # Usamos a action appleboy que roda em container externo,
-        # saindo do nosso container node:20 momentaneamente.
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 31.97.166.219
@@ -46,16 +40,17 @@ jobs:
           key: ${{ secrets.SERVERSSHKEY }}
           port: 22
           script: |
-            echo "Iniciando Deploy no Servidor..."
+            # Atualiza o código
             cd /var/www/tramaweb
             git pull origin main
             
-            echo "Instalando Backend..."
+            # Instala dependências e reinicia o backend
             cd backend
-            # Garante Node 20 no servidor também (caso use nvm)
+            
+            # Garante que o SERVIDOR também use Node 20 (se usar NVM)
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use 20 || echo "NVM não encontrado ou v20 não instalada, usando node sistema"
+            nvm use 20 || nvm install 20
             
             npm install
             pm2 restart tramaweb-backend
