@@ -12,10 +12,27 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        # Removi o 'with' incorreto daqui
+
+      # ADICIONE ESTE PASSO PARA CORRIGIR A VERSÃO DO NODE
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: 'npm'
-          
+          # Se o package.json não estiver na raiz, especifique o caminho:
+          # cache-dependency-path: './frontend/package-lock.json' 
+
+      # Se você tiver um passo de build aqui (onde o erro ocorreu), ele agora usará o Node 20
+      - name: Build Frontend
+        run: |
+           cd frontend # Ajuste conforme sua estrutura
+           npm install
+           npm run build
+        env:
+           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+           # Adicione outras variáveis de ambiente necessárias aqui
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
