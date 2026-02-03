@@ -13,29 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 1. Configura o Node 20 (SEM CACHE para evitar erros de caminho)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          # CORREÇÃO AQUI: Indica onde está o package-lock para o cache funcionar
-          cache-dependency-path: './frontend/package-lock.json'
+          # Removi a linha 'cache' e 'cache-dependency-path' para garantir que não falhe
 
-      - name: Install and Build Frontend
-        # CORREÇÃO AQUI: Garante que os comandos rodem dentro da pasta frontend
-        working-directory: ./frontend
+      # 2. Instala e Builda o Frontend (dentro da pasta correta)
+      - name: Build Frontend
+        working-directory: ./frontend  # IMPORTANTE: Entra na pasta frontend
         run: |
-          npm ci
+          npm install
           npm run build
         env:
+          # Adicione suas variáveis de ambiente aqui se o build precisar
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          # Se tiver AdSense ou outras vars, adicione aqui
 
-      # Se você precisar fazer deploy dos arquivos buildados do frontend para a VPS,
-      # você precisaria de um passo de SCP aqui. 
-      # Mas como seu script de deploy original roda o build lá no servidor (backend),
-      # talvez este passo de build no GitHub seja apenas para verificação de erros.
-
+      # 3. Faz o deploy no servidor via SSH
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -44,16 +39,17 @@ jobs:
           key: ${{ secrets.SERVERSSHKEY }}
           port: 22
           script: |
+            # Atualiza o código no servidor
             cd /var/www/tramaweb
             git pull origin main
             
-            # Backend
+            # Instala dependências do Backend e reinicia
             cd backend
             npm install
             pm2 restart tramaweb-backend
             
-            # Se você também builda o frontend no servidor:
-            cd ../frontend
-            npm install
-            npm run build
-            pm2 restart tramaweb-frontend # Se estiver usando PM2 para o front também
+            # Se você também builda o frontend no servidor, adicione aqui:
+            # cd ../frontend
+            # npm install
+            # npm run build
+            # pm2 restart tramaweb-frontend
