@@ -13,20 +13,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ESTE É O PASSO CRÍTICO. 
-      # Ele força o Node 20 e não usa cache para evitar o erro de "lock file not found".
-      - name: Setup Node.js 20
+      # PASSO CRÍTICO: Configura Node 20 ANTES de tentar qualquer build
+      - name: Force Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: '' # Desabilitado para evitar falhas de "lock file"
 
-      # Passo de debug para confirmar que o Node 20 está ativo
+      # Verificação para garantir que o Node 20 está ativo
       - name: Check Node Version
         run: node -v
 
-      # Build do Frontend
+      # Build do Frontend (Agora usará o Node 20 carregado acima)
       - name: Install and Build Frontend
-        working-directory: ./frontend  # Garante que roda na pasta certa
+        working-directory: ./frontend
         run: |
           npm install
           npm run build
@@ -34,7 +34,7 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_ADSENSE_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_ID }}
 
-      # Deploy no Servidor
+      # Deploy no Servidor via SSH
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -43,6 +43,7 @@ jobs:
           key: ${{ secrets.SERVERSSHKEY }}
           port: 22
           script: |
+            # Atualiza repositório
             cd /var/www/tramaweb
             git pull origin main
             
@@ -51,7 +52,9 @@ jobs:
             npm install
             pm2 restart tramaweb-backend
             
-            # (Opcional) Se você precisar rodar build no servidor também:
+            # ATENÇÃO: Se o seu frontend roda no servidor, 
+            # você provavelmente precisa buildar ele lá também:
             # cd ../frontend
             # npm install
             # npm run build
+            # pm2 restart tramaweb-frontend
