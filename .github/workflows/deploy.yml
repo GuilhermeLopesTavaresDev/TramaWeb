@@ -44,10 +44,18 @@ jobs:
             cd /var/www/tramaweb
             git pull origin main
             
+            # Backend
             cd backend
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 20 || nvm install 20
-            
             npm install
-            pm2 restart tramaweb-backend
+            pm2 restart tramaweb-backend || pm2 start src/server.js --name tramaweb-backend
+            
+            # Frontend - Rebuild com variáveis de produção
+            cd ../frontend
+            npm install
+            npm run build
+            pm2 restart tramaweb-frontend || pm2 start npm --name tramaweb-frontend -- start
+            
+            pm2 save
