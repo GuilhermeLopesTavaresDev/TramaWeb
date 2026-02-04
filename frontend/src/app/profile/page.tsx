@@ -68,6 +68,10 @@ export default function ProfilePage() {
             await profileService.updateProfile(user.id, updateData);
             setEditing(false);
             showToast('Perfil atualizado com sucesso!', 'success');
+
+            // Dispara evento para o Navbar atualizar em tempo real
+            window.dispatchEvent(new Event('storage'));
+
             await fetchProfile(user.id);
         } catch (error: any) {
             console.error('Erro ao salvar prefíl:', error);

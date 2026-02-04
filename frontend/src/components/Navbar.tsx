@@ -17,17 +17,25 @@ export default function Navbar() {
     const [hasSidebar, setHasSidebar] = useState(false);
 
     useEffect(() => {
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-            const userData = JSON.parse(userStr);
-            setUser(userData);
-            setUserName(userData.nome);
-            setHasSidebar(true);
-            fetchProfileData(userData.id);
-        } else {
-            setUser(null);
-            setHasSidebar(false);
-        }
+        const handleSync = () => {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const userData = JSON.parse(userStr);
+                setUser(userData);
+                setUserName(userData.nome);
+                setHasSidebar(true);
+                fetchProfileData(userData.id);
+            } else {
+                setUser(null);
+                setHasSidebar(false);
+            }
+        };
+
+        handleSync();
+
+        // Escuta mudanças de storage para atualizar em tempo real
+        window.addEventListener('storage', handleSync);
+        return () => window.removeEventListener('storage', handleSync);
     }, [pathname]);
 
     const fetchProfileData = async (userId: number) => {
