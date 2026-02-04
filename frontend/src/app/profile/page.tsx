@@ -5,6 +5,7 @@ import { useToast } from '@/context/ToastContext';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { profileService } from '@/services/profileService';
+import { config } from '@/config/api';
 import Link from 'next/link';
 
 export default function ProfilePage() {
@@ -157,7 +158,7 @@ export default function ProfilePage() {
                                 {editing ? (
                                     // Durante a edição, prioriza a foto recém-carregada ou a atual
                                     (newFoto || profileData.user.foto_url) ? (
-                                        <img src={newFoto || profileData.user.foto_url} alt={user?.nome} className="w-full h-full object-cover" />
+                                        <img src={config.getImageUrl(newFoto || profileData.user.foto_url)} alt={user?.nome} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-brand-blue text-6xl font-black">
                                             {user?.nome.charAt(0)}
@@ -166,7 +167,7 @@ export default function ProfilePage() {
                                 ) : (
                                     // Fora da edição, mostra a foto do banco de dados
                                     profileData.user.foto_url ? (
-                                        <img src={profileData.user.foto_url} alt={user?.nome} className="w-full h-full object-cover" />
+                                        <img src={config.getImageUrl(profileData.user.foto_url)} alt={user?.nome} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-brand-blue text-6xl font-black">
                                             {user?.nome.charAt(0)}

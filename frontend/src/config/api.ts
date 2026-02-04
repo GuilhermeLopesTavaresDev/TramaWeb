@@ -12,10 +12,15 @@ if (typeof window !== 'undefined') {
 export const config = {
     API_URL: API_BASE_URL,
     SOCKET_URL: SOCKET_URL,
-    // Helper para construir URLs de imagens
+    // Helper para construir URLs de imagens (Garante HTTPS e caminhos relativos)
     getImageUrl: (path: string) => {
         if (!path) return '';
-        if (path.startsWith('http')) return path;
-        return `${SOCKET_URL}${path}`;
+        // Se já for um link externo (não do nosso site), retorna ele
+        if (path.startsWith('http') && !path.includes('tramaweb.app') && !path.includes('31.97.166.219')) {
+            return path;
+        }
+        // Remove domínios antigos ou inseguros para deixar apenas o caminho
+        const cleanPath = path.replace(/^https?:\/\/[^\/]+/, '');
+        return `${SOCKET_URL}${cleanPath}`;
     }
 };

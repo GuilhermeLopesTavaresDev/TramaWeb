@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { profileService } from '@/services/profileService';
 import { useLayout } from '@/context/LayoutContext';
+import { config } from '@/config/api';
 import Questionnaire from './Questionnaire';
 
 export default function Navbar() {
@@ -116,7 +117,7 @@ export default function Navbar() {
                         <Link href="/profile" className="flex items-center gap-2 md:gap-4 py-1.5 md:py-2.5 px-3 md:px-5 bg-zinc-100 dark:bg-brand-dark/50 rounded-full border border-zinc-200 dark:border-brand-blue/30 hover:bg-white dark:hover:bg-brand-dark transition-all group">
                             <div className="w-8 h-8 md:w-12 md:h-12 bg-brand-blue/20 rounded-full overflow-hidden flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm flex-shrink-0">
                                 {userFoto ? (
-                                    <img src={userFoto} alt={userName} className="w-full h-full object-cover" />
+                                    <img src={config.getImageUrl(userFoto)} alt={userName} className="w-full h-full object-cover" />
                                 ) : (
                                     <svg className="w-8 h-8 text-brand-blue" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
