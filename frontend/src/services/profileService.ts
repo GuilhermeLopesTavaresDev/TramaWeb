@@ -4,7 +4,8 @@ const API_URL = config.API_URL;
 
 export const profileService = {
     async getProfile(userId: number) {
-        const response = await fetch(`${API_URL}/profile/${userId}`);
+        // Adiciona timestamp para evitar cache do navegador (browser caching issue fix)
+        const response = await fetch(`${API_URL}/profile/${userId}?t=${Date.now()}`);
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || 'Falha ao buscar perfil');
