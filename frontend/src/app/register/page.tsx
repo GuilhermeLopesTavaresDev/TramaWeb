@@ -12,8 +12,22 @@ export default function RegisterPage() {
     const [showSuccess, setShowSuccess] = useState(false);
     const router = useRouter();
 
+    const passwordRequirements = {
+        length: formData.senha.length >= 8,
+        uppercase: /[A-Z]/.test(formData.senha),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(formData.senha)
+    };
+
+    const isPasswordValid = Object.values(passwordRequirements).every(Boolean);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (formData.senha && !isPasswordValid) {
+            setError('Por favor, atenda a todos os requisitos de senha.');
+            return;
+        }
+
         setLoading(true);
         setError('');
 
@@ -110,8 +124,26 @@ export default function RegisterPage() {
                             value={formData.senha}
                             onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
                             placeholder="••••••••"
-                            className="w-full px-6 py-4 bg-zinc-50 dark:bg-brand-dark/80 border-2 border-transparent focus:border-brand-blue/30 rounded-2xl outline-none transition-all placeholder:text-zinc-400 dark:placeholder:text-brand-dark font-medium"
+                            className={`w-full px-6 py-4 bg-zinc-50 dark:bg-brand-dark/80 border-2 rounded-2xl outline-none transition-all placeholder:text-zinc-400 dark:placeholder:text-brand-dark font-medium ${formData.senha ? (isPasswordValid ? 'border-green-500/30' : 'border-brand-blue/30') : 'border-transparent'
+                                }`}
                         />
+
+                        {formData.senha && (
+                            <div className="mt-3 space-y-2 px-1">
+                                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+                                    <div className={`w-1.5 h-1.5 rounded-full transition-colors ${passwordRequirements.length ? 'bg-green-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                                    <span className={passwordRequirements.length ? 'text-green-500' : 'text-zinc-400'}>Mínimo 8 caracteres</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+                                    <div className={`w-1.5 h-1.5 rounded-full transition-colors ${passwordRequirements.uppercase ? 'bg-green-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                                    <span className={passwordRequirements.uppercase ? 'text-green-500' : 'text-zinc-400'}>Uma letra maiúscula</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+                                    <div className={`w-1.5 h-1.5 rounded-full transition-colors ${passwordRequirements.special ? 'bg-green-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                                    <span className={passwordRequirements.special ? 'text-green-500' : 'text-zinc-400'}>Um caractere especial (!@#)</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <button

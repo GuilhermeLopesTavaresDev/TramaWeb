@@ -7,8 +7,13 @@ const register = async (req, res) => {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
-
-
+    // Validação de senha: min 8 caracteres, 1 maiúscula, 1 caractere especial
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/;
+    if (!passwordRegex.test(senha)) {
+        return res.status(400).json({
+            error: 'A senha deve ter no mínimo 8 caracteres, incluindo uma letra maiúscula e um caractere especial (!@#$%).'
+        });
+    }
     try {
         const [result] = await db.execute(
             'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
