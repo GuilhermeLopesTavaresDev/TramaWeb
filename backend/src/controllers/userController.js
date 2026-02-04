@@ -37,7 +37,8 @@ const register = async (req, res) => {
 
         res.status(201).json({
             message: 'Usuário cadastrado com sucesso!',
-            userId: result.insertId
+            userId: result.insertId,
+            preferences_completed: false
         });
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
@@ -71,7 +72,8 @@ const login = async (req, res) => {
             user: {
                 id: user.id,
                 nome: user.nome,
-                email: user.email
+                email: user.email,
+                preferences_completed: !!user.preferences_completed
             }
         });
     } catch (error) {

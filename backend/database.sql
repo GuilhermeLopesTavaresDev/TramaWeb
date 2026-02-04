@@ -1,9 +1,30 @@
 -- 1. Garante que as colunas novas existam na tabela de usuários
 ALTER TABLE usuarios ADD COLUMN bio TEXT AFTER senha;
-ALTER TABLE usuarios ADD COLUMN foto_url VARCHAR(255) AFTER bio;
-ALTER TABLE usuarios ADD COLUMN status ENUM('Disponível', 'Ocupado', 'Lendo') DEFAULT 'Disponível' AFTER foto_url;
 
--- 2. Tabela para gerenciar livros lidos e interesses
+ALTER TABLE usuarios ADD COLUMN foto_url VARCHAR(255) AFTER bio;
+
+ALTER TABLE usuarios
+ADD COLUMN status ENUM(
+    'Disponível',
+    'Ocupado',
+    'Lendo'
+) DEFAULT 'Disponível' AFTER foto_url;
+
+ALTER TABLE usuarios
+ADD COLUMN preferences_completed BOOLEAN DEFAULT FALSE;
+
+-- 2. Tabela para salvar preferências do questionário
+CREATE TABLE IF NOT EXISTS preferencias_usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    generos TEXT, -- Lista de gêneros (JSON string ou separado por vírgula)
+    temas TEXT,
+    frequencia_leitura VARCHAR(50),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE
+);
+
+-- 3. Tabela para gerenciar livros lidos e interesses
 CREATE TABLE IF NOT EXISTS listas_leitura (
     id INT AUTO_INCREMENT,
     usuario_id INT,
@@ -13,7 +34,7 @@ CREATE TABLE IF NOT EXISTS listas_leitura (
     tipo ENUM('Lido', 'Pretendo Ler') NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE
 );
 
 -- 3. Tabela de chats de leitura
@@ -29,8 +50,8 @@ CREATE TABLE IF NOT EXISTS usuarios_chats (
     usuario_id INT,
     chat_id INT,
     PRIMARY KEY (usuario_id, chat_id),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES chats (id) ON DELETE CASCADE
 );
 
 -- 5. Tabela de mensagens do chat por livro
@@ -40,7 +61,7 @@ CREATE TABLE IF NOT EXISTS mensagens_chat (
     usuario_id INT NOT NULL,
     conteudo TEXT NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE
 );
 
 -- 6. Tabela de amizades
@@ -50,8 +71,8 @@ CREATE TABLE IF NOT EXISTS amizades (
     usuario_id2 INT NOT NULL,
     status ENUM('Pendente', 'Aceito') DEFAULT 'Pendente',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id1) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id2) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id1) REFERENCES usuarios (id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id2) REFERENCES usuarios (id) ON DELETE CASCADE,
     UNIQUE KEY (usuario_id1, usuario_id2)
 );
 
@@ -61,8 +82,8 @@ CREATE TABLE IF NOT EXISTS bloqueios (
     bloqueador_id INT NOT NULL,
     bloqueado_id INT NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (bloqueador_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (bloqueado_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (bloqueador_id) REFERENCES usuarios (id) ON DELETE CASCADE,
+    FOREIGN KEY (bloqueado_id) REFERENCES usuarios (id) ON DELETE CASCADE,
     UNIQUE KEY (bloqueador_id, bloqueado_id)
 );
 
@@ -73,6 +94,6 @@ CREATE TABLE IF NOT EXISTS denuncias (
     denunciado_id INT NOT NULL,
     motivo TEXT NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (denunciante_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (denunciado_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    FOREIGN KEY (denunciante_id) REFERENCES usuarios (id) ON DELETE CASCADE,
+    FOREIGN KEY (denunciado_id) REFERENCES usuarios (id) ON DELETE CASCADE
 );

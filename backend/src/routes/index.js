@@ -10,6 +10,7 @@ const chatController = require('../controllers/chatController');
 const friendController = require('../controllers/friendController');
 const securityController = require('../controllers/securityController');
 const privateChatController = require('../controllers/privateChatController');
+const preferenceController = require('../controllers/preferenceController');
 
 router.get('/status', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date() });
@@ -27,6 +28,8 @@ router.get('/profile/:userId', userProfileController.getProfile);
 router.put('/profile/:userId', userProfileController.updateProfile);
 router.post('/profile/:userId/list', userProfileController.addToList);
 router.delete('/profile/:userId/list/:bookId', userProfileController.removeFromList);
+router.post('/profile/preferences', preferenceController.savePreferences);
+router.get('/recommendations/:userId', preferenceController.getRecommendations);
 
 // Novas rotas de Proxy para iTunes (Evitar CORS)
 router.get('/books/search', bookController.proxySearch);

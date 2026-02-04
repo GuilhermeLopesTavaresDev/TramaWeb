@@ -8,6 +8,7 @@ import { bookService } from '@/services/bookService';
 import Typewriter from '@/components/Typewriter';
 import Cookies from 'js-cookie';
 import { useLayout } from '@/context/LayoutContext';
+import { config } from '@/config/api';
 
 interface Book {
     id: string | number;
@@ -33,7 +34,14 @@ export default function DashboardPage() {
             router.push('/login');
             return;
         }
-        setUser(JSON.parse(userStr));
+        const userData = JSON.parse(userStr);
+        setUser(userData);
+
+        // Se não completou o questionário, redireciona
+        if (!userData.preferences_completed) {
+            router.push('/questionnaire');
+            return;
+        }
 
         // Carregar do cookie
         const recentStr = Cookies.get('recent_books');
@@ -43,7 +51,26 @@ export default function DashboardPage() {
 
         const fetchInitialBooks = async () => {
             try {
-                const data = await bookService.searchBooks('literatura brasileira');
+                let searchTerms = 'literatura brasileira';
+
+                // Buscar recomendações se existirem
+                if (userData.id) {
+                    try {
+                        const recResponse = await fetch(`${config.API_URL}/recommendations/${userData.id}`);
+                        if (recResponse.ok) {
+                            const recData = await recResponse.json();
+                            if (recData.generos && recData.generos.length > 0) {
+                                // Pega 2 gêneros aleatórios para a busca inicial
+                                const shuffled = recData.generos.sort(() => 0.5 - Math.random());
+                                searchTerms = shuffled.slice(0, 2).join(' ');
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Erro ao buscar recomendações:', e);
+                    }
+                }
+
+                const data = await bookService.searchBooks(searchTerms);
                 setBooks(data);
             } catch (error) {
                 console.error('Erro ao carregar livros:', error);
