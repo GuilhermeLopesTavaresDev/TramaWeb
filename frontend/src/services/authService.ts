@@ -1,9 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
+import { config } from '../config/api';
 
-// Debug: Log API URL configuration
-console.log('🔍 [authService] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-console.log('🔍 [authService] Final API_URL:', API_URL);
-console.log('🔍 [authService] All env vars:', Object.keys(process.env).filter(k => k.startsWith('NEXT_PUBLIC')));
+const API_URL = config.API_URL;
 
 export const authService = {
     async register(userData: { nome: string; email: string; senha: string }) {
