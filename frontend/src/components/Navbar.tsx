@@ -53,7 +53,7 @@ export default function Navbar() {
                 const preferences_completed = !!data.user.preferences_completed;
                 console.log('[DEBUG-NAVBAR] Status de preferências no DB:', preferences_completed);
 
-                setUser(prev => {
+                setUser((prev: any) => {
                     if (!prev) return prev;
                     const newUser = { ...prev, preferences_completed };
 
