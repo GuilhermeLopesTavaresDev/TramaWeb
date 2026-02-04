@@ -178,7 +178,8 @@ export default function Chat({ bookId }: ChatProps) {
     const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
     return (
-        <div className="flex flex-col h-[800px] bg-zinc-50 dark:bg-brand-dark/40 rounded-[2.5rem] border border-zinc-100 dark:border-brand-blue/10 overflow-hidden">
+    return (
+        <div className="flex flex-col h-[70vh] md:h-[800px] bg-zinc-50 dark:bg-brand-dark/40 rounded-[2rem] md:rounded-[2.5rem] border border-zinc-100 dark:border-brand-blue/10 overflow-hidden shadow-2xl">
             {/* Header */}
             <div className="px-8 py-6 border-b border-zinc-100 dark:border-brand-blue/10 bg-white/50 dark:bg-brand-dark/50 backdrop-blur-sm">
                 <h3 className="text-xl font-black uppercase tracking-tighter text-brand-dark dark:text-zinc-50">
@@ -247,20 +248,20 @@ export default function Chat({ bookId }: ChatProps) {
             </div>
 
             {/* Input Area */}
-            <div className="p-6 bg-white/50 dark:bg-brand-dark/50 backdrop-blur-sm border-t border-zinc-100 dark:border-brand-blue/10">
+            <div className="p-4 md:p-6 bg-white/50 dark:bg-brand-dark/50 backdrop-blur-sm border-t border-zinc-100 dark:border-brand-blue/10">
                 {user ? (
-                    <form onSubmit={handleSendMessage} className="relative flex gap-3">
+                    <form onSubmit={handleSendMessage} className="relative flex gap-2 md:gap-3">
                         <input
                             type="text"
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Escreva sua teoria sobre a trama..."
-                            className="flex-1 px-8 py-5 bg-white dark:bg-brand-dark/60 border-2 border-transparent focus:border-brand-blue/30 rounded-2xl outline-none transition-all text-base font-medium shadow-inner"
+                            placeholder="Sua teoria..."
+                            className="flex-1 px-4 md:px-8 py-3.5 md:py-5 bg-white dark:bg-brand-dark/60 border-2 border-transparent focus:border-brand-blue/30 rounded-xl md:rounded-2xl outline-none transition-all text-sm md:text-base font-medium shadow-inner"
                         />
                         <button
                             type="submit"
                             disabled={!newMessage.trim()}
-                            className="px-8 py-5 bg-brand-gradient text-white rounded-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all text-sm uppercase tracking-widest disabled:opacity-50 disabled:scale-100"
+                            className="px-5 md:px-8 py-3.5 md:py-5 bg-brand-gradient text-white rounded-xl md:rounded-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all text-[0.65rem] md:text-sm uppercase tracking-widest disabled:opacity-50 disabled:scale-100"
                         >
                             Enviar
                         </button>
@@ -277,8 +278,8 @@ export default function Chat({ bookId }: ChatProps) {
             {/* User Context Menu */}
             {menuVisible && selectedUser && (
                 <div
-                    className="fixed z-[100] w-56 bg-white dark:bg-brand-dark rounded-2xl shadow-2xl border border-zinc-100 dark:border-brand-blue/20 p-2 animate-in fade-in zoom-in duration-200"
-                    style={{ left: menuPos.x, top: menuPos.y }}
+                    className="fixed z-[100] w-64 md:w-56 bg-white dark:bg-brand-dark rounded-2xl shadow-2xl border border-zinc-100 dark:border-brand-blue/20 p-2 animate-in fade-in zoom-in duration-200 bottom-24 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto"
+                    style={window.innerWidth > 768 ? { left: menuPos.x, top: menuPos.y } : {}}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="px-4 py-3 mb-1 border-b border-zinc-50 dark:border-brand-blue/10">

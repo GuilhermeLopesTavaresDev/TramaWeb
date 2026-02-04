@@ -1,11 +1,9 @@
-'use client';
-
-import { LayoutProvider, useLayout } from '@/context/LayoutContext';
 import Sidebar from '@/components/Sidebar';
 import { ToastProvider } from "@/context/ToastContext";
 import { ChatProvider } from "@/context/ChatContext";
 import { SocketProvider } from "@/context/SocketContext";
 import PrivateChatOverlay from "@/components/PrivateChatOverlay";
+import BottomNav from '@/components/BottomNav';
 
 function MainLayoutContent({ children }: { children: React.ReactNode }) {
     const { isSidebarOpen, closeSidebar } = useLayout();

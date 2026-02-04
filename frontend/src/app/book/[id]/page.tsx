@@ -119,10 +119,10 @@ export default function BookDetailPage() {
     if (!book) return null;
 
     return (
-        <div className="min-h-screen bg-white dark:bg-brand-dark text-brand-dark dark:text-zinc-50">
+        <div className="min-h-screen bg-white dark:bg-brand-dark text-brand-dark dark:text-zinc-50 relative pb-32 lg:pb-0">
             <Navbar />
 
-            <main className="max-w-7xl mx-auto px-6 pt-48 pb-20 transition-all duration-500">
+            <main className="max-w-7xl mx-auto px-4 md:px-6 pt-24 md:pt-48 pb-10 transition-all duration-500">
                 <Link href="/dashboard" className="inline-flex items-center gap-2 text-zinc-400 hover:text-brand-blue transition-colors mb-12 font-black uppercase tracking-widest text-xs">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -130,14 +130,14 @@ export default function BookDetailPage() {
                     Voltar para Biblioteca
                 </Link>
 
-                <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
-                    <div className="lg:col-span-3 sticky top-48 h-fit">
+                <div className="grid lg:grid-cols-12 gap-8 lg:gap-20">
+                    <div className="lg:col-span-3 lg:sticky lg:top-48 h-fit">
 
                         <div className="relative aspect-[2/3] max-w-[280px] mx-auto lg:mx-0 rounded-[2.5rem] overflow-hidden shadow-[0_40px_80px_-15px_rgba(37,99,235,0.2)] bg-zinc-100 dark:bg-brand-dark/50 group">
                             <img src={book.capa} alt={book.titulo} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                         </div>
 
-                        <div className="mt-8 flex flex-col gap-4 max-w-[280px] mx-auto lg:mx-0">
+                        <div className="mt-8 hidden lg:flex flex-col gap-4 max-w-[280px] mx-auto lg:mx-0">
                             <a href={book.urlLoja} target="_blank" className="w-full py-5 bg-brand-gradient text-white rounded-3xl font-black text-center text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-brand-blue/20">
                                 Comprar
                             </a>
@@ -187,19 +187,19 @@ export default function BookDetailPage() {
                                     </span>
                                 ))}
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 leading-[0.9] text-brand-dark dark:text-zinc-50">
+                            <h1 className="text-3xl md:text-7xl font-black tracking-tighter mb-4 md:mb-6 leading-[0.9] text-brand-dark dark:text-zinc-50">
                                 {book.titulo}
                             </h1>
-                            <p className="text-2xl md:text-3xl font-bold text-zinc-400 tracking-tight mb-8">
+                            <p className="text-xl md:text-3xl font-bold text-zinc-400 tracking-tight mb-8">
                                 por {book.autor}
                             </p>
 
-                            <div className="flex items-center gap-6 p-6 bg-zinc-50 dark:bg-brand-dark/40 rounded-[2rem] border border-zinc-100 dark:border-brand-blue/10 w-fit">
-                                <div className="flex gap-1">
+                            <div className="flex items-center gap-4 md:gap-6 p-4 md:p-6 bg-zinc-50 dark:bg-brand-dark/40 rounded-2xl md:rounded-[2rem] border border-zinc-100 dark:border-brand-blue/10 w-full md:w-fit">
+                                <div className="flex gap-0.5 md:gap-1">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <svg
                                             key={star}
-                                            className={`w-6 h-6 ${star <= Math.round(book.avaliacao || 0) ? 'text-brand-purple fill-brand-purple' : 'text-zinc-200 dark:text-brand-dark'}`}
+                                            className={`w-5 h-5 md:w-6 md:h-6 ${star <= Math.round(book.avaliacao || 0) ? 'text-brand-purple fill-brand-purple' : 'text-zinc-200 dark:text-brand-dark'}`}
                                             viewBox="0 0 20 20"
                                         >
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -207,8 +207,8 @@ export default function BookDetailPage() {
                                     ))}
                                 </div>
                                 <div className="text-sm font-black">
-                                    <span className="text-xl text-brand-purple">{book.avaliacao || '0.0'}</span>
-                                    <span className="text-zinc-400 ml-2 uppercase tracking-widest text-[0.65rem]">{book.totalAvaliacoes || 0} avaliações</span>
+                                    <span className="text-lg md:text-xl text-brand-purple">{book.avaliacao || '0.0'}</span>
+                                    <span className="text-zinc-400 ml-2 uppercase tracking-widest text-[0.6rem] md:text-[0.65rem]">{book.totalAvaliacoes || 0} avaliações</span>
                                 </div>
                             </div>
                         </section>
@@ -255,6 +255,31 @@ export default function BookDetailPage() {
                     </div>
                 </div>
             </main>
+
+            {/* Mobile Actions Bottom Bar */}
+            <div className="lg:hidden fixed bottom-16 left-0 right-0 p-4 bg-white/70 dark:bg-brand-dark/70 backdrop-blur-xl border-t border-zinc-100 dark:border-brand-blue/10 flex items-center gap-3 z-40">
+                <a href={book.urlLoja} target="_blank" className="flex-1 py-4 bg-brand-gradient text-white rounded-xl font-black text-center text-sm shadow-xl shadow-brand-blue/20">
+                    Comprar
+                </a>
+                {isInLidos ? (
+                    <button onClick={() => handleRemoveFromList('Lido')} className="p-4 bg-red-500/10 text-red-500 rounded-xl">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                ) : (
+                    <button onClick={() => handleSaveToList('Lido')} className="p-4 bg-zinc-950 dark:bg-zinc-50 text-white dark:text-zinc-950 rounded-xl">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" /></svg>
+                    </button>
+                )}
+                {isInPretendoLer ? (
+                    <button onClick={() => handleRemoveFromList('Pretendo Ler')} className="p-4 bg-brand-purple/10 text-brand-purple rounded-xl">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                ) : (
+                    <button onClick={() => handleSaveToList('Pretendo Ler')} className="p-4 bg-white dark:bg-brand-dark/50 border-2 border-brand-blue/20 text-brand-blue rounded-xl">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" /></svg>
+                    </button>
+                )}
+            </div>
         </div>
     );
 }

@@ -180,10 +180,10 @@ export default function DashboardPage() {
                         ))}
                     </div>
                 ) : books.length > 0 ? (
-                    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8 lg:gap-12">
+                    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-8 lg:gap-12">
                         {books.map((book) => (
                             <Link key={book.id} href={`/book/${book.id}`} className="group cursor-pointer">
-                                <div className="relative aspect-[2/3] mb-4 md:mb-6 overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-brand-blue/20 bg-zinc-100 dark:bg-brand-dark">
+                                <div className="relative aspect-[2/3] mb-3 md:mb-6 overflow-hidden rounded-2xl md:rounded-[2.5rem] shadow-xl md:shadow-2xl transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-brand-blue/20 bg-zinc-100 dark:bg-brand-dark">
                                     {book.cover ? (
                                         <img
                                             src={book.cover}
