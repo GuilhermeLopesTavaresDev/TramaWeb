@@ -15,6 +15,17 @@ const register = async (req, res) => {
         });
     }
     try {
+        // 1. Verificação explícita de e-mail duplicado
+        const [existingUser] = await db.execute(
+            'SELECT id FROM usuarios WHERE email = ?',
+            [email]
+        );
+
+        if (existingUser.length > 0) {
+            return res.status(400).json({ error: 'Este e-mail já está em uso por outra conta.' });
+        }
+
+        // 2. Inserção do novo usuário
         const [result] = await db.execute(
             'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
             [nome, email, senha]
@@ -26,7 +37,7 @@ const register = async (req, res) => {
         });
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({ error: 'Este e-mail já está cadastrado' });
+            return res.status(400).json({ error: 'Este e-mail já está em uso por outra conta.' });
         }
         console.error('Erro ao registrar usuário:', error);
         res.status(500).json({ error: 'Erro interno no servidor' });
