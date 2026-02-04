@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+app.set('trust proxy', 1); // Confia no Nginx para identificar HTTPS
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');

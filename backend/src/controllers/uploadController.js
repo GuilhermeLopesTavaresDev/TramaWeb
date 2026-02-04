@@ -59,12 +59,10 @@ const uploadProfileImage = async (req, res) => {
         console.log('Arquivo salvo:', req.file.filename);
         console.log('Caminho:', req.file.path);
 
-        // Gera a URL completa para o banco de dados
-        const protocol = req.protocol;
-        const host = req.get('host');
-        const imageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+        // Gera a URL relativa para o banco de dados (Mais seguro para HTTPS)
+        const imageUrl = `/uploads/${req.file.filename}`;
 
-        console.log('URL Gerada:', imageUrl);
+        console.log('URL Gerada (Relativa):', imageUrl);
         res.json({ imageUrl });
     } catch (error) {
         console.error('Erro no upload:', error);
