@@ -22,39 +22,45 @@ import { ChatProvider } from "@/context/ChatContext";
 import { SocketProvider } from "@/context/SocketContext";
 import Sidebar from "@/components/Sidebar";
 import PrivateChatOverlay from "@/components/PrivateChatOverlay";
+import { LayoutProvider, useLayout } from "@/context/LayoutContext";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+function MainLayout({ children }: { children: React.ReactNode }) {
+  const { isSidebarOpen, closeSidebar } = useLayout();
   return (
-    <html lang="en">
-      <head>
-        {/* Google AdSense Script */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7069836205314537"
-          crossOrigin="anonymous"
-        ></script>
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ToastProvider>
-          <SocketProvider>
+    <div className="flex">
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
+      <div className="flex-1 w-full overflow-x-hidden">
+        {children}
+      </div>
+    </div>
+  );
+}
+return (
+  <html lang="en">
+    <head>
+      {/* Google AdSense Script */}
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7069836205314537"
+        crossOrigin="anonymous"
+      ></script>
+    </head>
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    >
+      <ToastProvider>
+        <SocketProvider>
+          <ChatProvider>
             <ChatProvider>
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1">
-                  {children}
-                </div>
-              </div>
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
               <PrivateChatOverlay />
             </ChatProvider>
-          </SocketProvider>
-        </ToastProvider>
-      </body>
-    </html>
-  );
+          </ChatProvider>
+        </SocketProvider>
+      </ToastProvider>
+    </body>
+  </html>
+);
 }

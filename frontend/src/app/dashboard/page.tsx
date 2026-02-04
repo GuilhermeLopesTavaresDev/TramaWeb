@@ -91,17 +91,17 @@ export default function DashboardPage() {
             <main className="max-w-7xl mx-auto px-6 pt-48 pb-20 transition-all duration-500">
 
                 <header className="mb-16">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-8 md:mb-12">
                         <div className="flex-1">
-                            <h1 className="text-4xl md:text-7xl font-black tracking-tighter mb-4 leading-none">
+                            <h1 className="text-3xl sm:text-4xl md:text-7xl font-black tracking-tighter mb-4 leading-none">
                                 <Typewriter text="Sua próxima" speed={100} showCursor={false} /> <br />
                                 <span className="bg-brand-gradient bg-clip-text text-transparent">
                                     <Typewriter text="história." speed={100} delay={1200} showCursor={false} />
                                 </span>
                             </h1>
-                            <div className="text-zinc-500 dark:text-zinc-400 text-lg md:text-xl max-w-xl leading-relaxed">
+                            <div className="text-zinc-500 dark:text-zinc-400 text-sm md:text-xl max-w-xl leading-relaxed">
                                 <Typewriter
-                                    text="Pesquisa em tempo real integrada à Open Library. Comece a digitar e veja a mágica."
+                                    text="Pesquisa em tempo real integrada à iTunes API. Comece a digitar e veja a mágica."
                                     speed={30}
                                     delay={2500}
                                     showCursor={true}
@@ -117,7 +117,7 @@ export default function DashboardPage() {
                                     onChange={handleInputChange}
                                     onFocus={() => searchQuery.length > 2 && setShowSuggestions(true)}
                                     placeholder="Pesquise por título ou autor..."
-                                    className="w-full pl-14 pr-6 py-5 bg-zinc-100 dark:bg-brand-dark/50 border-2 border-transparent focus:border-brand-blue dark:focus:border-brand-blue focus:bg-white dark:focus:bg-brand-dark rounded-3xl outline-none transition-all text-lg font-medium shadow-sm group-hover:shadow-xl"
+                                    className="w-full pl-12 md:pl-14 pr-6 py-4 md:py-5 bg-zinc-100 dark:bg-brand-dark/50 border-2 border-transparent focus:border-brand-blue dark:focus:border-brand-blue focus:bg-white dark:focus:bg-brand-dark rounded-2xl md:rounded-3xl outline-none transition-all text-sm md:text-lg font-medium shadow-sm group-hover:shadow-xl"
                                 />
                                 <div className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-brand-blue transition-colors">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,10 +180,10 @@ export default function DashboardPage() {
                         ))}
                     </div>
                 ) : books.length > 0 ? (
-                    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 lg:gap-12">
+                    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8 lg:gap-12">
                         {books.map((book) => (
                             <Link key={book.id} href={`/book/${book.id}`} className="group cursor-pointer">
-                                <div className="relative aspect-[2/3] mb-6 overflow-hidden rounded-[2.5rem] shadow-2xl transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-brand-blue/20 bg-zinc-100 dark:bg-brand-dark">
+                                <div className="relative aspect-[2/3] mb-4 md:mb-6 overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-brand-blue/20 bg-zinc-100 dark:bg-brand-dark">
                                     {book.cover ? (
                                         <img
                                             src={book.cover}
@@ -206,11 +206,11 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="text-center px-2">
-                                    <h3 className="font-black text-lg leading-[1.2] mb-1 group-hover:text-brand-blue transition-colors uppercase tracking-tight line-clamp-2 min-h-[3rem]">
+                                <div className="text-center px-1 md:px-2">
+                                    <h3 className="font-black text-xs md:text-lg leading-[1.2] mb-1 group-hover:text-brand-blue transition-colors uppercase tracking-tight line-clamp-2 min-h-[2.5rem] md:min-h-[3rem]">
                                         {book.title}
                                     </h3>
-                                    <p className="text-[0.7rem] font-bold text-zinc-400 uppercase tracking-[0.15em] line-clamp-1">
+                                    <p className="text-[0.5rem] md:text-[0.7rem] font-bold text-zinc-400 uppercase tracking-widest md:tracking-[0.15em] line-clamp-1">
                                         {book.author}
                                     </p>
                                 </div>
