@@ -7,14 +7,14 @@ export default function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        console.log('[DEBUG] CookieConsent Component Mounted');
         const consent = Cookies.get('tramaweb_consent');
+        console.log('[DEBUG] Cookie consent status:', consent);
         if (!consent) {
-            // Pequeno delay para a animação ficar mais elegante
-            const timer = setTimeout(() => setIsVisible(true), 1500);
-            return () => clearTimeout(timer);
+            console.log('[DEBUG] Showing cookie banner now');
+            setIsVisible(true);
         }
     }, []);
-
     const handleAcceptAll = () => {
         Cookies.set('tramaweb_consent', 'all', { expires: 365, path: '/' });
         setIsVisible(false);
