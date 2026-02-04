@@ -23,8 +23,13 @@ export default function Navbar() {
                 const userData = JSON.parse(userStr);
                 setUser(userData);
                 setUserName(userData.nome);
-                setHasSidebar(true);
+                setHasSidebar(!!userData.preferences_completed);
                 fetchProfileData(userData.id);
+
+                // Redirecionamento Global para usuários logados mas sem questionário
+                if (!userData.preferences_completed && pathname !== '/questionnaire') {
+                    router.push('/questionnaire');
+                }
             } else {
                 setUser(null);
                 setHasSidebar(false);
@@ -90,20 +95,33 @@ export default function Navbar() {
 
 
                 <div className="flex items-center gap-3 md:gap-8">
-                    <Link href="/profile" className="flex items-center gap-2 md:gap-4 py-1.5 md:py-2.5 px-3 md:px-5 bg-zinc-100 dark:bg-brand-dark/50 rounded-full border border-zinc-200 dark:border-brand-blue/30 hover:bg-white dark:hover:bg-brand-dark transition-all group">
-                        <div className="w-8 h-8 md:w-12 md:h-12 bg-brand-blue/20 rounded-full overflow-hidden flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm flex-shrink-0">
-                            {userFoto ? (
-                                <img src={userFoto} alt={userName} className="w-full h-full object-cover" />
-                            ) : (
-                                <svg className="w-8 h-8 text-brand-blue" fill="currentColor" viewBox="0 0 24 24">
+                    {user?.preferences_completed ? (
+                        <Link href="/profile" className="flex items-center gap-2 md:gap-4 py-1.5 md:py-2.5 px-3 md:px-5 bg-zinc-100 dark:bg-brand-dark/50 rounded-full border border-zinc-200 dark:border-brand-blue/30 hover:bg-white dark:hover:bg-brand-dark transition-all group">
+                            <div className="w-8 h-8 md:w-12 md:h-12 bg-brand-blue/20 rounded-full overflow-hidden flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm flex-shrink-0">
+                                {userFoto ? (
+                                    <img src={userFoto} alt={userName} className="w-full h-full object-cover" />
+                                ) : (
+                                    <svg className="w-8 h-8 text-brand-blue" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                    </svg>
+                                )}
+                            </div>
+                            <span className="text-xs md:text-base font-black text-brand-dark dark:text-zinc-50 truncate max-w-[100px] md:max-w-[200px] uppercase tracking-tighter">
+                                {userName}
+                            </span>
+                        </Link>
+                    ) : (
+                        <div className="flex items-center gap-2 md:gap-4 py-1.5 md:py-2.5 px-3 md:px-5 bg-zinc-50 dark:bg-brand-dark/20 rounded-full border border-zinc-100 dark:border-brand-blue/10 opacity-50 cursor-not-allowed">
+                            <div className="w-8 h-8 md:w-12 md:h-12 bg-zinc-200 dark:bg-brand-blue/10 rounded-full flex items-center justify-center">
+                                <svg className="w-5 h-5 text-zinc-400" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                                 </svg>
-                            )}
+                            </div>
+                            <span className="text-xs md:text-base font-black text-zinc-400 uppercase tracking-tighter">
+                                {userName}
+                            </span>
                         </div>
-                        <span className="text-xs md:text-base font-black text-brand-dark dark:text-zinc-50 truncate max-w-[100px] md:max-w-[200px] uppercase tracking-tighter">
-                            {userName}
-                        </span>
-                    </Link>
+                    )}
 
 
                     <button
