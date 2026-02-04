@@ -23,8 +23,10 @@ function MainLayoutContent({ children }: { children: React.ReactNode }) {
 }
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
+    console.log('[DEBUG] LayoutWrapper Rendering');
     return (
         <ToastProvider>
+            <div id="layout-debug" className="hidden">Layout Mounted</div>
             <SocketProvider>
                 <ChatProvider>
                     <LayoutProvider>

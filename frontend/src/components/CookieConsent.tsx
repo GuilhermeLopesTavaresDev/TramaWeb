@@ -8,7 +8,7 @@ export default function CookieConsent() {
 
     useEffect(() => {
         console.log('[DEBUG] CookieConsent Component Mounted');
-        const consent = Cookies.get('tramaweb_consent');
+        const consent = Cookies.get('tramaweb_consent_v1');
         console.log('[DEBUG] Cookie consent status:', consent);
         if (!consent) {
             console.log('[DEBUG] Showing cookie banner now');
@@ -16,20 +16,25 @@ export default function CookieConsent() {
         }
     }, []);
     const handleAcceptAll = () => {
-        Cookies.set('tramaweb_consent', 'all', { expires: 365, path: '/' });
+        Cookies.set('tramaweb_consent_v1', 'all', { expires: 365, path: '/' });
         setIsVisible(false);
     };
 
     const handleDecline = () => {
-        Cookies.set('tramaweb_consent', 'essential', { expires: 365, path: '/' });
+        Cookies.set('tramaweb_consent_v1', 'essential', { expires: 365, path: '/' });
         setIsVisible(false);
     };
 
-    if (!isVisible) return null;
+    if (!isVisible) {
+        console.log('[DEBUG] CookieConsent suppressed: isVisible is false');
+        return null;
+    }
+
+    console.log('[DEBUG] Rendering CookieConsent UI');
 
     return (
-        <div className="fixed bottom-6 left-6 right-6 md:left-auto md:right-8 md:bottom-8 md:max-w-md z-[100] animate-in slide-in-from-bottom-10 fade-in duration-700">
-            <div className="bg-white/80 dark:bg-brand-dark/90 backdrop-blur-2xl border border-zinc-200 dark:border-brand-blue/20 rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-brand-blue/5">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] md:w-auto md:max-w-md z-[9999] opacity-100 visible">
+            <div className="bg-white dark:bg-brand-dark border-4 border-red-500 rounded-[2.5rem] p-8 shadow-[0_0_50px_rgba(239,68,68,0.3)]">
                 <div className="flex flex-col gap-6">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-brand-gradient rounded-2xl flex items-center justify-center p-3 shadow-lg shadow-brand-blue/20">
