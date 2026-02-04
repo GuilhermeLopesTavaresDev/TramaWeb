@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation';
 import { useChat } from '@/context/ChatContext';
 import { useSocket } from '@/context/SocketContext';
 
-const SOCKET_URL = 'http://localhost:3002';
+import { config } from '@/config/api';
+
+const API_URL = config.API_URL;
 
 export default function PrivateChatOverlay() {
     const { activeFriend, isOpen, isMinimized, openChat, closeChat, toggleMinimize } = useChat();
@@ -86,7 +88,7 @@ export default function PrivateChatOverlay() {
 
     const fetchHistory = async (userId: number, fid: number) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/chat/private/${userId}/${fid}`);
+            const response = await fetch(`${API_URL}/api/chat/private/${userId}/${fid}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);

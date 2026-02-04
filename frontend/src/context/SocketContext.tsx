@@ -18,34 +18,47 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const [connected, setConnected] = useState(false);
 
     useEffect(() => {
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-            const user = JSON.parse(userStr);
-            const newSocket = io(SOCKET_URL, {
-                path: '/socket.io',
-                transports: ['websocket'],
-                query: { userId: user.id }
-            });
+        const connectSocket = () => {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                const newSocket = io(SOCKET_URL, {
+                    path: '/socket.io',
+                    transports: ['websocket'],
+                    query: { userId: user.id }
+                });
 
-            newSocket.on('connect', () => {
-                console.log('[SOCKET] Conectado com ID:', newSocket.id);
-                setConnected(true);
+                newSocket.on('connect', () => {
+                    console.log('[SOCKET] Conectado com ID:', newSocket.id);
+                    setConnected(true);
+                    newSocket.emit('join_personal_room', { userId: user.id });
+                });
 
-                // Entrar na sala pessoal para notificações globais
-                newSocket.emit('join_personal_room', { userId: user.id });
-            });
+                newSocket.on('disconnect', () => {
+                    console.log('[SOCKET] Desconectado');
+                    setConnected(false);
+                });
 
-            newSocket.on('disconnect', () => {
-                console.log('[SOCKET] Desconectado');
-                setConnected(false);
-            });
+                setSocket(newSocket);
 
-            setSocket(newSocket);
+                return newSocket;
+            }
+            return null;
+        };
 
-            return () => {
-                newSocket.disconnect();
-            };
-        }
+        let currentSocket = connectSocket();
+
+        const handleStorageChange = () => {
+            if (currentSocket) currentSocket.disconnect();
+            currentSocket = connectSocket();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            if (currentSocket) currentSocket.disconnect();
+            window.removeEventListener('storage', handleStorageChange);
+        };
     }, []);
 
     return (

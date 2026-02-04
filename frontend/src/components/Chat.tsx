@@ -146,7 +146,7 @@ export default function Chat({ bookId }: ChatProps) {
         const fetchHistory = async () => {
             console.log(`Buscando histórico para o livro: ${bookId}`);
             try {
-                const response = await fetch(`${SOCKET_URL}/api/chat/${bookId}`);
+                const response = await fetch(`${config.API_URL}/api/chat/${bookId}`);
                 if (!response.ok) throw new Error('Falha ao carregar histórico');
                 const data = await response.json();
                 setMessages(data);
@@ -211,7 +211,7 @@ export default function Chat({ bookId }: ChatProps) {
                             >
                                 {m.usuario_foto ? (
                                     <img
-                                        src={`http://localhost:3002${m.usuario_foto}`}
+                                        src={config.getImageUrl(m.usuario_foto)}
                                         alt={m.usuario_nome}
                                         className="w-10 h-10 rounded-full object-cover border-2 border-brand-blue/20"
                                     />
