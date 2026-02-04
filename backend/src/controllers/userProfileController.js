@@ -18,6 +18,15 @@ const getProfile = async (req, res) => {
 
         const user = users[0];
 
+        // VERIFICAÇÃO DIRETA: Se existe preferência, está completado.
+        const [prefsCheck] = await db.execute(
+            'SELECT 1 FROM preferencias_usuario WHERE usuario_id = ? LIMIT 1',
+            [userId]
+        );
+
+        // Sobrescreve a flag com a realidade do banco de dados de preferências
+        user.preferences_completed = prefsCheck.length > 0 ? 1 : 0;
+
         // Busca lista de leitura
         const [readingList] = await db.execute(
             'SELECT * FROM listas_leitura WHERE usuario_id = ?',
