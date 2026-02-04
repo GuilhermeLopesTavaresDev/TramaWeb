@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { profileService } from '@/services/profileService';
 import { useLayout } from '@/context/LayoutContext';
+import Questionnaire from './Questionnaire';
 
 export default function Navbar() {
     const { toggleSidebar } = useLayout();
@@ -25,11 +26,6 @@ export default function Navbar() {
                 setUserName(userData.nome);
                 setHasSidebar(!!userData.preferences_completed);
                 fetchProfileData(userData.id);
-
-                // Redirecionamento Global para usuários logados mas sem questionário
-                if (!userData.preferences_completed && pathname !== '/questionnaire') {
-                    router.push('/questionnaire');
-                }
             } else {
                 setUser(null);
                 setHasSidebar(false);
@@ -135,6 +131,11 @@ export default function Navbar() {
                     </button>
                 </div>
             </div>
+
+            {/* Modal de Questionário para usuários que não completaram */}
+            {user && !user.preferences_completed && (
+                <Questionnaire userId={user.id} userName={user.nome} />
+            )}
         </nav>
     );
 }

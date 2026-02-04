@@ -37,12 +37,6 @@ export default function DashboardPage() {
         const userData = JSON.parse(userStr);
         setUser(userData);
 
-        // Se não completou o questionário, redireciona
-        if (!userData.preferences_completed) {
-            router.push('/questionnaire');
-            return;
-        }
-
         // Carregar do cookie
         const recentStr = Cookies.get('recent_books');
         if (recentStr) {
