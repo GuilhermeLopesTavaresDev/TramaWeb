@@ -2,6 +2,7 @@ const db = require('../config/database');
 
 const register = async (req, res) => {
     const { nome, email, senha } = req.body;
+    console.log('[DEBUG] Tentativa de registro:', { nome, email, senha: '***' });
 
     if (!nome || !email || !senha) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
@@ -9,9 +10,12 @@ const register = async (req, res) => {
 
     // Validação de senha: min 8 caracteres, 1 maiúscula, 1 caractere especial
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/;
-    if (!passwordRegex.test(senha)) {
+    const validPassword = passwordRegex.test(senha);
+    console.log('[DEBUG] Senha válida:', validPassword);
+
+    if (!validPassword) {
         return res.status(400).json({
-            error: 'A senha deve ter no mínimo 8 caracteres, incluindo uma letra maiúscula e um caractere especial (!@#$%).'
+            error: 'Sua senha precisa ser mais forte! Use pelo menos 8 caracteres, incluindo uma letra MAIÚSCULA e um caractere especial (como !, @, #, etc).'
         });
     }
     try {
