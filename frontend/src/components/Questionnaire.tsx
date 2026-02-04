@@ -74,7 +74,11 @@ export default function Questionnaire({ userId, userName }: QuestionnaireProps) 
                 }
 
                 showToast('Perfil configurado com sucesso! Bem-vindo(a) à sua TRAMA.', 'success');
-                // Não redirecionamos, o próprio Navbar vai fechar o modal
+
+                // Força um recarregamento total para limpar estados residuais e garantir o Dashboard limpo
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 1500);
             } else {
                 throw new Error('Falha ao salvar preferências');
             }
@@ -118,8 +122,8 @@ export default function Questionnaire({ userId, userName }: QuestionnaireProps) 
                                     key={genre}
                                     onClick={() => toggleItem(genre, selectedGenres, setSelectedGenres)}
                                     className={`px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 border-2 ${selectedGenres.includes(genre)
-                                            ? 'bg-brand-blue border-brand-blue text-white shadow-lg shadow-brand-blue/20'
-                                            : 'bg-zinc-50 dark:bg-brand-dark/50 border-zinc-100 dark:border-brand-blue/10 text-zinc-400 hover:border-brand-blue/30'
+                                        ? 'bg-brand-blue border-brand-blue text-white shadow-lg shadow-brand-blue/20'
+                                        : 'bg-zinc-50 dark:bg-brand-dark/50 border-zinc-100 dark:border-brand-blue/10 text-zinc-400 hover:border-brand-blue/30'
                                         }`}
                                 >
                                     {genre}
@@ -142,8 +146,8 @@ export default function Questionnaire({ userId, userName }: QuestionnaireProps) 
                                     key={theme}
                                     onClick={() => toggleItem(theme, selectedThemes, setSelectedThemes)}
                                     className={`px-4 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 border-2 ${selectedThemes.includes(theme)
-                                            ? 'bg-brand-purple border-brand-purple text-white shadow-lg shadow-brand-purple/20'
-                                            : 'bg-zinc-50 dark:bg-brand-dark/50 border-zinc-100 dark:border-brand-blue/10 text-zinc-400 hover:border-brand-purple/30'
+                                        ? 'bg-brand-purple border-brand-purple text-white shadow-lg shadow-brand-purple/20'
+                                        : 'bg-zinc-50 dark:bg-brand-dark/50 border-zinc-100 dark:border-brand-blue/10 text-zinc-400 hover:border-brand-purple/30'
                                         }`}
                                 >
                                     {theme}
@@ -166,8 +170,8 @@ export default function Questionnaire({ userId, userName }: QuestionnaireProps) 
                                     key={f}
                                     onClick={() => setFrequency(f)}
                                     className={`w-full px-6 py-5 rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-300 border-2 text-left flex items-center justify-between ${frequency === f
-                                            ? 'bg-brand-gradient border-transparent text-white shadow-xl'
-                                            : 'bg-zinc-50 dark:bg-brand-dark/50 border-zinc-100 dark:border-brand-blue/10 text-zinc-400 hover:border-brand-blue/30'
+                                        ? 'bg-brand-gradient border-transparent text-white shadow-xl'
+                                        : 'bg-zinc-50 dark:bg-brand-dark/50 border-zinc-100 dark:border-brand-blue/10 text-zinc-400 hover:border-brand-blue/30'
                                         }`}
                                 >
                                     {f}

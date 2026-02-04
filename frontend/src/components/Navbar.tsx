@@ -51,21 +51,25 @@ export default function Navbar() {
                 }
 
                 // Sincroniza o estado de completude do questionário com o DB
-                const preferences_completed = !!data.user.preferences_completed;
+                const preferences_completed = data.user.preferences_completed === 1 || data.user.preferences_completed === true;
                 console.log('[DEBUG-NAVBAR] Status de preferências no DB:', preferences_completed);
 
                 setUser((prev: any) => {
                     if (!prev) return prev;
-                    const newUser = { ...prev, preferences_completed };
 
-                    // Atualiza o localStorage se houver mudança ou se estiver faltando
+                    // Se o status no DB for diferente do que temos, atualiza tudo
                     if (prev.preferences_completed !== preferences_completed) {
+                        const newUser = { ...prev, preferences_completed };
                         localStorage.setItem('user', JSON.stringify(newUser));
+                        setHasSidebar(preferences_completed);
+                        return newUser;
                     }
-                    return newUser;
+                    return prev;
                 });
 
-                setHasSidebar(preferences_completed);
+                if (preferences_completed) {
+                    setHasSidebar(true);
+                }
             }
         } catch (error) {
             console.error('Erro ao buscar perfil no Navbar:', error);
