@@ -31,6 +31,40 @@ const getBooks = (req, res) => {
     res.json(db);
 };
 
+const proxySearch = async (req, res) => {
+    try {
+        const { term, limit = 15 } = req.query;
+        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=ebook&country=br&limit=${limit}`;
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Falha ao buscar no iTunes');
+
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Erro no proxySearch:', error);
+        res.status(500).json({ error: 'Erro ao buscar livros no iTunes' });
+    }
+};
+
+const proxyLookup = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const url = `https://itunes.apple.com/lookup?id=${id}&country=br&entity=ebook`;
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Falha ao buscar detalhes no iTunes');
+
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Erro no proxyLookup:', error);
+        res.status(500).json({ error: 'Erro ao buscar detalhes do livro no iTunes' });
+    }
+};
+
 module.exports = {
-    getBooks
+    getBooks,
+    proxySearch,
+    proxyLookup
 };

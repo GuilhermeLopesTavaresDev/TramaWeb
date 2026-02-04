@@ -34,10 +34,10 @@ export const bookService = {
 
     async searchBooks(query: string = 'literatura brasileira', limit: number = 15) {
         try {
-            const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=ebook&country=br&limit=${limit}`;
+            const url = `${API_URL}/books/search?term=${encodeURIComponent(query)}&limit=${limit}`;
             const response = await fetch(url);
 
-            if (!response.ok) throw new Error('Falha ao buscar no Apple Books');
+            if (!response.ok) throw new Error('Falha ao buscar no Apple Books via Proxy');
 
             const data = await response.json();
 
@@ -64,10 +64,10 @@ export const bookService = {
 
     async getBookById(id: string) {
         try {
-            const url = `https://itunes.apple.com/lookup?id=${id}&country=br&entity=ebook`;
+            const url = `${API_URL}/books/lookup/${id}`;
             const response = await fetch(url);
 
-            if (!response.ok) throw new Error('Falha ao buscar detalhes do livro');
+            if (!response.ok) throw new Error('Falha ao buscar detalhes do livro via Proxy');
 
             const data = await response.json();
 

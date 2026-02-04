@@ -28,6 +28,10 @@ router.put('/profile/:userId', userProfileController.updateProfile);
 router.post('/profile/:userId/list', userProfileController.addToList);
 router.delete('/profile/:userId/list/:bookId', userProfileController.removeFromList);
 
+// Novas rotas de Proxy para iTunes (Evitar CORS)
+router.get('/books/search', bookController.proxySearch);
+router.get('/books/lookup/:id', bookController.proxyLookup);
+
 // Rotas de Chat
 router.get('/chat/:bookId', chatController.getChatHistory);
 
