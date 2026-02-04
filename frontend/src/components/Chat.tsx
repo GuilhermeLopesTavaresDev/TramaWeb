@@ -41,7 +41,7 @@ export default function Chat({ bookId }: ChatProps) {
         if (!user || user.id === friendId) return;
 
         try {
-            const response = await fetch(`${SOCKET_URL}/api/friends/${user.id}/request`, {
+            const response = await fetch(`${config.API_URL}/friends/${user.id}/request`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ friendId })
@@ -73,7 +73,7 @@ export default function Chat({ bookId }: ChatProps) {
     const handleBlockUser = async () => {
         if (!user || !selectedUser) return;
         try {
-            const response = await fetch(`${SOCKET_URL}/api/security/${user.id}/block`, {
+            const response = await fetch(`${config.API_URL}/security/${user.id}/block`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ blockedId: selectedUser.id })
@@ -96,7 +96,7 @@ export default function Chat({ bookId }: ChatProps) {
         if (!reason) return;
 
         try {
-            const response = await fetch(`${SOCKET_URL}/api/security/${user.id}/report`, {
+            const response = await fetch(`${config.API_URL}/security/${user.id}/report`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ reportedId: selectedUser.id, reason })
@@ -146,7 +146,7 @@ export default function Chat({ bookId }: ChatProps) {
         const fetchHistory = async () => {
             console.log(`Buscando histórico para o livro: ${bookId}`);
             try {
-                const response = await fetch(`${config.API_URL}/api/chat/${bookId}`);
+                const response = await fetch(`${config.API_URL}/chat/${bookId}`);
                 if (!response.ok) throw new Error('Falha ao carregar histórico');
                 const data = await response.json();
                 setMessages(data);

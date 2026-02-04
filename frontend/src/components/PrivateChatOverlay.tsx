@@ -88,7 +88,7 @@ export default function PrivateChatOverlay() {
 
     const fetchHistory = async (userId: number, fid: number) => {
         try {
-            const response = await fetch(`${API_URL}/api/chat/private/${userId}/${fid}`);
+            const response = await fetch(`${API_URL}/chat/private/${userId}/${fid}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
