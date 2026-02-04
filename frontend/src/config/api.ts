@@ -1,6 +1,6 @@
 // Configuração centralizada de URLs da API
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
-const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3002';
+const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '').replace('http://', 'https://') || 'http://localhost:3002';
 
 // Debug
 if (typeof window !== 'undefined') {
