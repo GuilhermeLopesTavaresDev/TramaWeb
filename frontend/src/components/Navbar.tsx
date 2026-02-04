@@ -34,6 +34,8 @@ export default function Navbar() {
 
         handleSync();
 
+        console.log('[DEBUG-NAVBAR] Usuário atual no sync:', localStorage.getItem('user'));
+
         // Escuta mudanças de storage para atualizar em tempo real
         window.addEventListener('storage', handleSync);
         return () => window.removeEventListener('storage', handleSync);
@@ -42,11 +44,30 @@ export default function Navbar() {
     const fetchProfileData = async (userId: number) => {
         try {
             const data = await profileService.getProfile(userId);
-            if (data?.user?.foto_url) {
-                setUserFoto(data.user.foto_url);
+            if (data?.user) {
+                if (data.user.foto_url) {
+                    setUserFoto(data.user.foto_url);
+                }
+
+                // Sincroniza o estado de completude do questionário com o DB
+                const preferences_completed = !!data.user.preferences_completed;
+                console.log('[DEBUG-NAVBAR] Status de preferências no DB:', preferences_completed);
+
+                setUser(prev => {
+                    if (!prev) return prev;
+                    const newUser = { ...prev, preferences_completed };
+
+                    // Atualiza o localStorage se houver mudança ou se estiver faltando
+                    if (prev.preferences_completed !== preferences_completed) {
+                        localStorage.setItem('user', JSON.stringify(newUser));
+                    }
+                    return newUser;
+                });
+
+                setHasSidebar(preferences_completed);
             }
         } catch (error) {
-            console.error('Erro ao buscar foto do perfil no Navbar:', error);
+            console.error('Erro ao buscar perfil no Navbar:', error);
         }
     };
 
@@ -61,7 +82,7 @@ export default function Navbar() {
     if (!user) return null;
 
     return (
-        <nav className={`fixed top-0 ${hasSidebar ? 'lg:left-80' : 'left-0'} left-0 right-0 z-50 bg-white/80 dark:bg-brand-dark/80 backdrop-blur-md border-b border-zinc-200 dark:border-brand-blue/20 transition-all duration-500`}>
+        <nav className={`fixed top-0 ${hasSidebar ? 'lg:left-80' : 'left-0'} left-0 right-0 z-[2000] bg-white/80 dark:bg-brand-dark/80 backdrop-blur-md border-b border-zinc-200 dark:border-brand-blue/20 transition-all duration-500`}>
             <div className="w-full px-4 md:px-8 h-20 md:h-32 flex items-center justify-between">
 
                 {/* Hamburger menu for mobile */}

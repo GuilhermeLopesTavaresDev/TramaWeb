@@ -8,7 +8,7 @@ const getProfile = async (req, res) => {
     try {
         // Busca dados básicos do usuário
         const [users] = await db.execute(
-            'SELECT id, nome, email, bio, foto_url, status FROM usuarios WHERE id = ?',
+            'SELECT id, nome, email, bio, foto_url, status, preferences_completed FROM usuarios WHERE id = ?',
             [userId]
         );
 
