@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import { bookService } from '@/services/bookService';
 import { profileService } from '@/services/profileService';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 interface BookDetail {
     id: number;
@@ -40,6 +41,19 @@ export default function BookDetailPage() {
                     return;
                 }
                 setBook(data);
+
+                // Salvar nos vistos recentemente via cookie
+                const recentStr = Cookies.get('recent_books') || '[]';
+                let recentLinks = JSON.parse(recentStr);
+
+                // Evitar duplicados e limitar a 5
+                recentLinks = [
+                    { id: data.id, titulo: data.titulo, capa: data.capa },
+                    ...recentLinks.filter((item: any) => item.id !== data.id)
+                ].slice(0, 5);
+
+                Cookies.set('recent_books', JSON.stringify(recentLinks), { expires: 7 });
+
             } catch (error) {
                 console.error('Erro ao carregar livro:', error);
             } finally {

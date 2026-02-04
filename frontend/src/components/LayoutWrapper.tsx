@@ -7,6 +7,7 @@ import { ChatProvider } from "@/context/ChatContext";
 import { SocketProvider } from "@/context/SocketContext";
 import PrivateChatOverlay from "@/components/PrivateChatOverlay";
 import BottomNav from '@/components/BottomNav';
+import CookieConsent from '@/components/CookieConsent';
 
 function MainLayoutContent({ children }: { children: React.ReactNode }) {
     const { isSidebarOpen, closeSidebar } = useLayout();
@@ -31,6 +32,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
                             {children}
                         </MainLayoutContent>
                         <PrivateChatOverlay />
+                        <CookieConsent />
                     </LayoutProvider>
                 </ChatProvider>
             </SocketProvider>

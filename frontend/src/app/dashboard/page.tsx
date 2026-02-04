@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { bookService } from '@/services/bookService';
 import Typewriter from '@/components/Typewriter';
+import Cookies from 'js-cookie';
+import { useLayout } from '@/context/LayoutContext';
 
 interface Book {
     id: string | number;
@@ -22,6 +24,7 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
     const [isSearching, setIsSearching] = useState(false);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [recentBooks, setRecentBooks] = useState<any[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -31,6 +34,12 @@ export default function DashboardPage() {
             return;
         }
         setUser(JSON.parse(userStr));
+
+        // Carregar do cookie
+        const recentStr = Cookies.get('recent_books');
+        if (recentStr) {
+            setRecentBooks(JSON.parse(recentStr));
+        }
 
         const fetchInitialBooks = async () => {
             try {
@@ -166,6 +175,38 @@ export default function DashboardPage() {
                         </span>
                     </div>
                 </header>
+
+                {recentBooks.length > 0 && !searchQuery && (
+                    <section className="mb-16 animate-in fade-in slide-in-from-left-4 duration-700">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter text-brand-dark dark:text-zinc-50">
+                                Vistos <span className="text-brand-purple">Recentemente</span>
+                            </h2>
+                            <button
+                                onClick={() => { Cookies.remove('recent_books'); setRecentBooks([]); }}
+                                className="text-[10px] font-bold text-zinc-400 hover:text-red-500 transition-colors uppercase tracking-[0.2em]"
+                            >
+                                Limpar histórico
+                            </button>
+                        </div>
+                        <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-none">
+                            {recentBooks.map((book) => (
+                                <Link
+                                    key={book.id}
+                                    href={`/book/${book.id}`}
+                                    className="flex-shrink-0 w-24 md:w-32 group"
+                                >
+                                    <div className="aspect-[2/3] rounded-2xl overflow-hidden mb-3 shadow-lg group-hover:shadow-2xl group-hover:scale-105 transition-all bg-zinc-100 dark:bg-brand-dark/50">
+                                        <img src={book.capa} alt={book.titulo} className="w-full h-full object-cover" />
+                                    </div>
+                                    <p className="text-[10px] font-black uppercase tracking-tighter truncate group-hover:text-brand-blue transition-colors text-center">
+                                        {book.titulo}
+                                    </p>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {loading && !isSearching ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
