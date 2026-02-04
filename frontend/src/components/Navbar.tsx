@@ -4,8 +4,10 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { profileService } from '@/services/profileService';
+import { useLayout } from '@/context/LayoutContext';
 
-export default function Navbar({ onMenuToggle }: { onMenuToggle?: () => void }) {
+export default function Navbar() {
+    const { toggleSidebar } = useLayout();
     const [userName, setUserName] = useState('');
     const [userFoto, setUserFoto] = useState('');
     const [user, setUser] = useState<any>(null);
@@ -56,7 +58,7 @@ export default function Navbar({ onMenuToggle }: { onMenuToggle?: () => void }) 
                 {/* Hamburger menu for mobile */}
                 {hasSidebar && (
                     <button
-                        onClick={onMenuToggle}
+                        onClick={toggleSidebar}
                         className="p-2 -ml-2 text-brand-dark dark:text-zinc-50 lg:hidden hover:bg-zinc-100 dark:hover:bg-brand-dark/50 rounded-xl transition-colors"
                     >
                         <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
