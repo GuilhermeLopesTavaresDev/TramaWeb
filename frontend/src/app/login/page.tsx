@@ -22,6 +22,8 @@ export default function LoginPage() {
             setShowSuccess(true);
 
             localStorage.setItem('user', JSON.stringify(data.user));
+            // Trigger manual storage event for same-tab listeners (like SocketContext)
+            window.dispatchEvent(new Event('storage'));
 
             setTimeout(() => {
                 router.push('/dashboard');

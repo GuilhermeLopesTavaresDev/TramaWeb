@@ -87,11 +87,14 @@ export default function PrivateChatOverlay() {
     }, [messages, isMinimized]);
 
     const fetchHistory = async (userId: number, fid: number) => {
+        console.log(`[DEBUG] Buscando histórico privado: ${config.API_URL}/chat/private/${userId}/${fid}`);
         try {
-            const response = await fetch(`${API_URL}/chat/private/${userId}/${fid}`);
+            const response = await fetch(`${config.API_URL}/chat/private/${userId}/${fid}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
+            } else {
+                console.error(`[ERRO] Falha ao carregar histórico privado: ${response.status}`);
             }
         } catch (error) {
             console.error('Erro ao buscar histórico:', error);

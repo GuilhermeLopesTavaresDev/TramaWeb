@@ -144,10 +144,10 @@ export default function Chat({ bookId }: ChatProps) {
 
         // Carregar histórico
         const fetchHistory = async () => {
-            console.log(`Buscando histórico para o livro: ${bookId}`);
+            console.log(`[DEBUG] Buscando histórico: ${config.API_URL}/chat/${bookId}`);
             try {
                 const response = await fetch(`${config.API_URL}/chat/${bookId}`);
-                if (!response.ok) throw new Error('Falha ao carregar histórico');
+                if (!response.ok) throw new Error(`Status ${response.status}`);
                 const data = await response.json();
                 setMessages(data);
             } catch (error) {
