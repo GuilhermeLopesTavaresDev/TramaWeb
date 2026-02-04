@@ -2,26 +2,25 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Configuração da pasta de uploads (Fora do repositório se disponível no servidor)
-console.log('--- DEBUG STORAGE ---');
-console.log('NODE_ENV:', process.env.NODE_ENV);
+// Configuração da pasta de uploads (Fora do repositório em produção)
+console.log('--- DIAGNÓSTICO DE ARMAZENAMENTO ---');
+const EXTERNAL_PATH = '/var/www/uploads';
+const LOCAL_PATH = path.join(__dirname, '../../uploads');
 
-const uploadDir = process.env.NODE_ENV === 'production'
-    ? '/var/www/uploads'
-    : path.join(__dirname, '../../uploads');
+// Se a pasta externa existir, usa ela. Caso contrário, usa a local.
+const uploadDir = fs.existsSync(EXTERNAL_PATH) ? EXTERNAL_PATH : LOCAL_PATH;
 
-console.log('Caminho de Upload Ativo:', uploadDir);
+console.log('Ambiente:', process.env.NODE_ENV || 'não definido');
+console.log('Pasta Destino:', uploadDir);
 
 if (!fs.existsSync(uploadDir)) {
-    console.log('Pasta não existe, tentando criar:', uploadDir);
+    console.log('Criando pasta:', uploadDir);
     try {
         fs.mkdirSync(uploadDir, { recursive: true });
-        console.log('Pasta criada com sucesso.');
     } catch (err) {
-        console.error('Erro ao criar pasta de uploads:', err);
     }
 }
-console.log('---------------------');
+console.log('-----------------------------------');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

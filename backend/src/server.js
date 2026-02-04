@@ -28,10 +28,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // Servir arquivos de upload (Fora do repositório em produção)
-const uploadDir = process.env.NODE_ENV === 'production'
-    ? '/var/www/uploads'
-    : path.join(__dirname, '../uploads');
-app.use('/uploads', express.static(uploadDir));
+const fs = require('fs');
+const EXTERNAL_PATH = '/var/www/uploads';
+const LOCAL_PATH = path.join(__dirname, '../uploads');
+const finalUploadDir = fs.existsSync(EXTERNAL_PATH) ? EXTERNAL_PATH : LOCAL_PATH;
+app.use('/uploads', express.static(finalUploadDir));
 
 // Routes
 app.use('/api', routes);
