@@ -10,8 +10,7 @@ const LOCAL_PATH = path.join(__dirname, '../../uploads');
 // Se a pasta externa existir, usa ela. Caso contrário, usa a local.
 const uploadDir = fs.existsSync(EXTERNAL_PATH) ? EXTERNAL_PATH : LOCAL_PATH;
 
-console.log('Ambiente:', process.env.NODE_ENV || 'não definido');
-console.log('Pasta Destino:', uploadDir);
+console.log('Caminho de Upload Ativo:', uploadDir);
 
 if (!fs.existsSync(uploadDir)) {
     console.log('Criando pasta:', uploadDir);

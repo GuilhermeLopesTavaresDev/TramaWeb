@@ -63,23 +63,27 @@ const updateProfile = async (req, res) => {
             const [rows] = await db.execute('SELECT foto_url FROM usuarios WHERE id = ?', [userId]);
             const oldFotoUrl = rows[0]?.foto_url;
 
+            console.log('[DEBUG] Tentando limpar foto antiga:', oldFotoUrl);
+            console.log('[DEBUG] Nova foto URL recebida:', foto_url);
+
             if (oldFotoUrl && oldFotoUrl !== foto_url) {
-                // Tenta extrair o nome do arquivo da URL (ex: http://.../uploads/nome-arquivo.jpg)
                 const filename = oldFotoUrl.split('/').pop();
 
-                // Define o diretório baseado no ambiente
-                const uploadDir = process.env.NODE_ENV === 'production'
-                    ? '/var/www/uploads'
-                    : path.join(__dirname, '../../uploads');
+                // Lógica unificada de detecção de pasta
+                const EXTERNAL_PATH = '/var/www/uploads';
+                const LOCAL_PATH = path.join(__dirname, '../../uploads');
+                const uploadDir = fs.existsSync(EXTERNAL_PATH) ? EXTERNAL_PATH : LOCAL_PATH;
 
                 const filePath = path.join(uploadDir, filename);
+                console.log('[DEBUG] Caminho calculado para deletar:', filePath);
 
-                // Deleta se o arquivo existir
                 if (fs.existsSync(filePath)) {
                     fs.unlink(filePath, (err) => {
-                        if (err) console.error('Erro ao deletar foto antiga:', err);
-                        else console.log('Foto antiga deletada com sucesso:', filename);
+                        if (err) console.error('[ERRO] Falha ao deletar foto antiga:', err);
+                        else console.log('[DEBUG] Foto antiga deletada com sucesso:', filename);
                     });
+                } else {
+                    console.log('[DEBUG] Arquivo antigo não encontrado no disco (pulando deleção):', filePath);
                 }
             }
         }
