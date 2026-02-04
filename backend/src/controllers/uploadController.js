@@ -3,17 +3,25 @@ const path = require('path');
 const fs = require('fs');
 
 // Configuração da pasta de uploads (Fora do repositório se disponível no servidor)
+console.log('--- DEBUG STORAGE ---');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 const uploadDir = process.env.NODE_ENV === 'production'
     ? '/var/www/uploads'
     : path.join(__dirname, '../../uploads');
 
+console.log('Caminho de Upload Ativo:', uploadDir);
+
 if (!fs.existsSync(uploadDir)) {
+    console.log('Pasta não existe, tentando criar:', uploadDir);
     try {
         fs.mkdirSync(uploadDir, { recursive: true });
+        console.log('Pasta criada com sucesso.');
     } catch (err) {
         console.error('Erro ao criar pasta de uploads:', err);
     }
 }
+console.log('---------------------');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
