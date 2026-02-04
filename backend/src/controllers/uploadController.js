@@ -2,10 +2,17 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Garante que a pasta uploads existe
-const uploadDir = path.join(__dirname, '../../uploads');
+// Configuração da pasta de uploads (Fora do repositório se disponível no servidor)
+const uploadDir = process.env.NODE_ENV === 'production'
+    ? '/var/www/uploads'
+    : path.join(__dirname, '../../uploads');
+
 if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    } catch (err) {
+        console.error('Erro ao criar pasta de uploads:', err);
+    }
 }
 
 const storage = multer.diskStorage({
@@ -21,7 +28,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // Limite de 10MB
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5MB conforme solicitado
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());

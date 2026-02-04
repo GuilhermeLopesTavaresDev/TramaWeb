@@ -26,7 +26,12 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Servir arquivos de upload (Fora do repositório em produção)
+const uploadDir = process.env.NODE_ENV === 'production'
+    ? '/var/www/uploads'
+    : path.join(__dirname, '../uploads');
+app.use('/uploads', express.static(uploadDir));
 
 // Routes
 app.use('/api', routes);

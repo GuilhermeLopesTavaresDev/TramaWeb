@@ -1,4 +1,6 @@
 const db = require('../config/database');
+const fs = require('fs');
+const path = require('path');
 
 const getProfile = async (req, res) => {
     const { userId } = req.params;
@@ -56,6 +58,32 @@ const updateProfile = async (req, res) => {
     console.log('Dados recebidos:', { bio, foto_url, status });
 
     try {
+        // 1. Lógica para deletar a foto antiga se uma nova for fornecida
+        if (foto_url) {
+            const [rows] = await db.execute('SELECT foto_url FROM usuarios WHERE id = ?', [userId]);
+            const oldFotoUrl = rows[0]?.foto_url;
+
+            if (oldFotoUrl && oldFotoUrl !== foto_url) {
+                // Tenta extrair o nome do arquivo da URL (ex: http://.../uploads/nome-arquivo.jpg)
+                const filename = oldFotoUrl.split('/').pop();
+
+                // Define o diretório baseado no ambiente
+                const uploadDir = process.env.NODE_ENV === 'production'
+                    ? '/var/www/uploads'
+                    : path.join(__dirname, '../../uploads');
+
+                const filePath = path.join(uploadDir, filename);
+
+                // Deleta se o arquivo existir
+                if (fs.existsSync(filePath)) {
+                    fs.unlink(filePath, (err) => {
+                        if (err) console.error('Erro ao deletar foto antiga:', err);
+                        else console.log('Foto antiga deletada com sucesso:', filename);
+                    });
+                }
+            }
+        }
+
         const [result] = await db.execute(
             'UPDATE usuarios SET bio = ?, foto_url = ?, status = ? WHERE id = ?',
             [bio || null, foto_url || null, status || 'Disponível', userId]
