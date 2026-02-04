@@ -178,7 +178,7 @@ export default function Chat({ bookId }: ChatProps) {
     const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
     return (
-        <div className="flex flex-col h-[70vh] md:h-[800px] bg-zinc-50 dark:bg-brand-dark/40 rounded-[2rem] md:rounded-[2.5rem] border border-zinc-100 dark:border-brand-blue/10 overflow-hidden shadow-2xl">
+        <div className="flex flex-col h-[75dvh] md:h-[800px] bg-zinc-50 dark:bg-brand-dark/40 rounded-2xl md:rounded-[2.5rem] border border-zinc-100 dark:border-brand-blue/10 overflow-hidden shadow-2xl">
             {/* Header */}
             <div className="px-8 py-6 border-b border-zinc-100 dark:border-brand-blue/10 bg-white/50 dark:bg-brand-dark/50 backdrop-blur-sm">
                 <h3 className="text-xl font-black uppercase tracking-tighter text-brand-dark dark:text-zinc-50">

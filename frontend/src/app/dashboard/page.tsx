@@ -93,7 +93,7 @@ export default function DashboardPage() {
                 <header className="mb-16">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-8 md:mb-12">
                         <div className="flex-1">
-                            <h1 className="text-3xl sm:text-4xl md:text-7xl font-black tracking-tighter mb-4 leading-none">
+                            <h1 className="text-fluid-h1 font-black tracking-tighter mb-4">
                                 <Typewriter text="Sua próxima" speed={100} showCursor={false} /> <br />
                                 <span className="bg-brand-gradient bg-clip-text text-transparent">
                                     <Typewriter text="história." speed={100} delay={1200} showCursor={false} />
@@ -206,11 +206,11 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="text-center px-1 md:px-2">
-                                    <h3 className="font-black text-xs md:text-lg leading-[1.2] mb-1 group-hover:text-brand-blue transition-colors uppercase tracking-tight line-clamp-2 min-h-[2.5rem] md:min-h-[3rem]">
+                                <div className="text-center px-1">
+                                    <h3 className="font-black text-[10px] sm:text-xs md:text-lg leading-[1.2] mb-1 group-hover:text-brand-blue transition-colors uppercase tracking-tight line-clamp-2 min-h-[1.5rem] sm:min-h-[2.5rem] md:min-h-[3rem]">
                                         {book.title}
                                     </h3>
-                                    <p className="text-[0.5rem] md:text-[0.7rem] font-bold text-zinc-400 uppercase tracking-widest md:tracking-[0.15em] line-clamp-1">
+                                    <p className="text-[8px] md:text-[0.7rem] font-bold text-zinc-400 uppercase tracking-widest md:tracking-[0.15em] line-clamp-1">
                                         {book.author}
                                     </p>
                                 </div>

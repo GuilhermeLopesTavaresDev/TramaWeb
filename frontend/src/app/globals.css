@@ -15,6 +15,26 @@
   --color-brand-purple: #7C3AED;
   --color-brand-dark: #0F172A;
   --background-image-brand-gradient: linear-gradient(45deg, #2563EB, #7C3AED);
+
+  /* Fluid Spacing & Typography */
+  --fluid-pt: clamp(6rem, 15vh, 12rem);
+  --fluid-px: clamp(1rem, 5vw, 2rem);
+  --fluid-h1: clamp(2.5rem, 8vw, 5rem);
+  --fluid-h2: clamp(1.5rem, 5vw, 3rem);
+}
+
+@utility fluid-pt {
+  padding-top: var(--fluid-pt);
+}
+
+@utility fluid-px {
+  padding-left: var(--fluid-px);
+  padding-right: var(--fluid-px);
+}
+
+@utility text-fluid-h1 {
+  font-size: var(--fluid-h1);
+  line-height: 0.9;
 }
 
 

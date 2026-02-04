@@ -122,8 +122,8 @@ export default function BookDetailPage() {
         <div className="min-h-screen bg-white dark:bg-brand-dark text-brand-dark dark:text-zinc-50 relative pb-32 lg:pb-0">
             <Navbar />
 
-            <main className="max-w-7xl mx-auto px-4 md:px-6 pt-24 md:pt-48 pb-10 transition-all duration-500">
-                <Link href="/dashboard" className="inline-flex items-center gap-2 text-zinc-400 hover:text-brand-blue transition-colors mb-12 font-black uppercase tracking-widest text-xs">
+            <main className="max-w-7xl mx-auto fluid-px fluid-pt pb-10 transition-all duration-500">
+                <Link href="/dashboard" className="inline-flex items-center gap-2 text-zinc-400 hover:text-brand-blue transition-colors mb-8 md:mb-12 font-black uppercase tracking-widest text-[10px] md:text-xs">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -187,10 +187,10 @@ export default function BookDetailPage() {
                                     </span>
                                 ))}
                             </div>
-                            <h1 className="text-3xl md:text-7xl font-black tracking-tighter mb-4 md:mb-6 leading-[0.9] text-brand-dark dark:text-zinc-50">
+                            <h1 className="text-fluid-h1 font-black tracking-tighter mb-4 leading-[0.9] text-brand-dark dark:text-zinc-50">
                                 {book.titulo}
                             </h1>
-                            <p className="text-xl md:text-3xl font-bold text-zinc-400 tracking-tight mb-8">
+                            <p className="text-lg md:text-3xl font-bold text-zinc-400 tracking-tight mb-8">
                                 por {book.autor}
                             </p>
 

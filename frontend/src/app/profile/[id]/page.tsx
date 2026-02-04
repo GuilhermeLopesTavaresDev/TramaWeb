@@ -55,13 +55,13 @@ export default function PublicProfilePage() {
         <div className="min-h-screen bg-white dark:bg-brand-dark text-brand-dark dark:text-zinc-50">
             <Navbar />
 
-            <main className="max-w-7xl mx-auto px-6 pt-48 pb-20 transition-all duration-500">
+            <main className="max-w-7xl mx-auto fluid-px fluid-pt pb-20 transition-all duration-500">
                 <div className="grid lg:grid-cols-12 gap-12">
 
                     {/* Lateral Esquerda */}
                     <div className="lg:col-span-4 space-y-8">
                         <div className="relative group">
-                            <div className="w-full aspect-square rounded-[3rem] overflow-hidden bg-brand-blue/10 border-4 border-white dark:border-brand-dark shadow-2xl relative">
+                            <div className="w-full max-w-[300px] lg:max-w-none mx-auto aspect-square rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-brand-blue/10 border-4 border-white dark:border-brand-dark shadow-2xl relative">
                                 {profileData.user.foto_url ? (
                                     <img src={profileData.user.foto_url} alt={profileData.user.nome} className="w-full h-full object-cover" />
                                 ) : (
