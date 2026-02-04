@@ -1,4 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
+import { config } from '../config/api';
+
+const API_URL = config.API_URL;
 
 export const profileService = {
     async getProfile(userId: number) {

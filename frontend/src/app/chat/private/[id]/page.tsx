@@ -13,7 +13,10 @@ interface Message {
     criado_em: string;
 }
 
-const SOCKET_URL = 'http://localhost:3002';
+import { config } from '@/config/api';
+
+const SOCKET_URL = config.SOCKET_URL;
+const API_URL = config.API_URL;
 
 export default function PrivateChatPage() {
     const { id: friendId } = useParams();
@@ -60,7 +63,7 @@ export default function PrivateChatPage() {
 
     const fetchHistory = async (userId: number, fid: number) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/chat/private/${userId}/${fid}`);
+            const response = await fetch(`${config.API_URL}/chat/private/${userId}/${fid}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
@@ -72,7 +75,7 @@ export default function PrivateChatPage() {
 
     const fetchFriend = async (fid: number) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/profile/${fid}`);
+            const response = await fetch(`${config.API_URL}/profile/${fid}`);
             if (response.ok) {
                 const data = await response.json();
                 setFriend(data.user);
@@ -109,7 +112,7 @@ export default function PrivateChatPage() {
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8 bg-zinc-50 dark:bg-brand-dark/50 p-4 rounded-3xl border border-zinc-100 dark:border-brand-blue/10">
                     {friend.foto_url ? (
-                        <img src={`http://localhost:3002${friend.foto_url}`} className="w-12 h-12 rounded-full object-cover border-2 border-brand-blue" alt={friend.nome} />
+                        <img src={config.getImageUrl(friend.foto_url)} className="w-12 h-12 rounded-full object-cover border-2 border-brand-blue" alt={friend.nome} />
                     ) : (
                         <div className="w-12 h-12 bg-brand-gradient rounded-full flex items-center justify-center font-black text-white uppercase">{friend.nome[0]}</div>
                     )}
@@ -127,8 +130,8 @@ export default function PrivateChatPage() {
                     {messages.map((msg) => (
                         <div key={msg.id} className={`flex ${msg.remetente_id === user.id ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[70%] px-6 py-4 rounded-[2rem] text-sm font-medium shadow-sm leading-relaxed ${msg.remetente_id === user.id
-                                    ? 'bg-brand-gradient text-white rounded-tr-none'
-                                    : 'bg-zinc-100 dark:bg-brand-blue/10 text-brand-dark dark:text-zinc-200 rounded-tl-none'
+                                ? 'bg-brand-gradient text-white rounded-tr-none'
+                                : 'bg-zinc-100 dark:bg-brand-blue/10 text-brand-dark dark:text-zinc-200 rounded-tl-none'
                                 }`}>
                                 {msg.conteudo}
                                 <p className={`text-[0.6rem] mt-2 opacity-50 font-black uppercase ${msg.remetente_id === user.id ? 'text-right' : 'text-left'}`}>

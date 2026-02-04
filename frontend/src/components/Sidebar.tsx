@@ -205,7 +205,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose
                                     <div key={req.id} className="bg-brand-blue/5 border border-brand-blue/10 rounded-2xl p-3 space-y-3 animate-in slide-in-from-left-2 duration-500">
                                         <div className="flex items-center gap-3">
                                             {req.foto_url ? (
-                                                <img src={`http://localhost:3002${req.foto_url}`} className="w-8 h-8 rounded-full border border-brand-blue/20" alt="" />
+                                                <img src={config.getImageUrl(req.foto_url)} className="w-8 h-8 rounded-full border border-brand-blue/20" alt="" />
                                             ) : (
                                                 <div className="w-8 h-8 bg-brand-gradient rounded-full flex items-center justify-center font-black text-white text-[0.6rem]">{req.nome[0]}</div>
                                             )}
@@ -253,7 +253,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose
                                     <div className="relative">
                                         {friend.foto_url ? (
                                             <img
-                                                src={`http://localhost:3002${friend.foto_url}`}
+                                                src={config.getImageUrl(friend.foto_url)}
                                                 alt={friend.nome}
                                                 className="w-10 h-10 rounded-full object-cover border border-zinc-100 dark:border-brand-blue/10"
                                             />
