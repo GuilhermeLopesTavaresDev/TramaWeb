@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { profileService } from '@/services/profileService';
 import { useChat } from '@/context/ChatContext';
+import { config } from '@/config/api';
 
 interface BookItem {
     book_id: string;
@@ -59,14 +60,14 @@ export default function Sidebar() {
             setBooks(uniqueBooks);
 
             // Buscar amigos
-            const friendsResponse = await fetch(`http://localhost:3002/api/friends/${userId}`);
+            const friendsResponse = await fetch(`${config.API_URL}/friends/${userId}`);
             if (friendsResponse.ok) {
                 const friendsData = await friendsResponse.json();
                 setFriends(friendsData);
             }
 
             // Buscar pedidos pendentes
-            const pendingResponse = await fetch(`http://localhost:3002/api/friends/${userId}/pending`);
+            const pendingResponse = await fetch(`${config.API_URL}/friends/${userId}/pending`);
             if (pendingResponse.ok) {
                 const pendingData = await pendingResponse.json();
                 setPendingRequests(pendingData);
@@ -79,7 +80,7 @@ export default function Sidebar() {
     const handleAccept = async (friendId: number) => {
         if (!user) return;
         try {
-            const response = await fetch(`http://localhost:3002/api/friends/${user.id}/accept`, {
+            const response = await fetch(`${config.API_URL}/friends/${user.id}/accept`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ friendId })
@@ -95,7 +96,7 @@ export default function Sidebar() {
     const handleReject = async (friendId: number) => {
         if (!user) return;
         try {
-            const response = await fetch(`http://localhost:3002/api/friends/${user.id}/reject`, {
+            const response = await fetch(`${config.API_URL}/friends/${user.id}/reject`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ friendId })

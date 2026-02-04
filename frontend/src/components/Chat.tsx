@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useToast } from '@/context/ToastContext';
 import { useSocket } from '@/context/SocketContext';
+import { config } from '@/config/api';
 
 interface Message {
     id: number;
@@ -19,7 +20,7 @@ interface ChatProps {
     bookId: string;
 }
 
-const SOCKET_URL = 'http://localhost:3002';
+const SOCKET_URL = config.SOCKET_URL;
 
 export default function Chat({ bookId }: ChatProps) {
     const [messages, setMessages] = useState<Message[]>([]);
