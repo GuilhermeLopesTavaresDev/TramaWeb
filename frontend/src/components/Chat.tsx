@@ -178,7 +178,6 @@ export default function Chat({ bookId }: ChatProps) {
     const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
     return (
-    return (
         <div className="flex flex-col h-[70vh] md:h-[800px] bg-zinc-50 dark:bg-brand-dark/40 rounded-[2rem] md:rounded-[2.5rem] border border-zinc-100 dark:border-brand-blue/10 overflow-hidden shadow-2xl">
             {/* Header */}
             <div className="px-8 py-6 border-b border-zinc-100 dark:border-brand-blue/10 bg-white/50 dark:bg-brand-dark/50 backdrop-blur-sm">
@@ -279,7 +278,7 @@ export default function Chat({ bookId }: ChatProps) {
             {menuVisible && selectedUser && (
                 <div
                     className="fixed z-[100] w-64 md:w-56 bg-white dark:bg-brand-dark rounded-2xl shadow-2xl border border-zinc-100 dark:border-brand-blue/20 p-2 animate-in fade-in zoom-in duration-200 bottom-24 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto"
-                    style={window.innerWidth > 768 ? { left: menuPos.x, top: menuPos.y } : {}}
+                    style={typeof window !== 'undefined' && window.innerWidth > 768 ? { left: menuPos.x, top: menuPos.y } : {}}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="px-4 py-3 mb-1 border-b border-zinc-50 dark:border-brand-blue/10">
@@ -287,14 +286,14 @@ export default function Chat({ bookId }: ChatProps) {
                         <p className="text-xs font-black text-brand-dark dark:text-zinc-50 truncate">{selectedUser.nome}</p>
                     </div>
                     <button
-                        onClick={() => { handleRequestFriend(selectedUser.id, selectedUser.nome); setMenuVisible(false); }}
+                        onClick={() => { selectedUser && handleRequestFriend(selectedUser.id, selectedUser.nome); setMenuVisible(false); }}
                         className="w-full flex items-center gap-3 px-3 py-2.5 text-[0.65rem] font-black uppercase tracking-widest text-brand-blue hover:bg-brand-blue/5 rounded-xl transition-all"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
                         Adicionar Amigo
                     </button>
                     <Link
-                        href={`/profile/${selectedUser.id}`}
+                        href={`/profile/${selectedUser?.id}`}
                         className="w-full flex items-center gap-3 px-3 py-2.5 text-[0.65rem] font-black uppercase tracking-widest text-brand-dark dark:text-zinc-50 hover:bg-zinc-50 dark:hover:bg-brand-blue/5 rounded-xl transition-all"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>

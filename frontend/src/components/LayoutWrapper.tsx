@@ -1,3 +1,6 @@
+'use client';
+
+import { LayoutProvider, useLayout } from '@/context/LayoutContext';
 import Sidebar from '@/components/Sidebar';
 import { ToastProvider } from "@/context/ToastContext";
 import { ChatProvider } from "@/context/ChatContext";
