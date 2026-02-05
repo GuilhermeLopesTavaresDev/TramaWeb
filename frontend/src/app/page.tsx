@@ -179,7 +179,10 @@ export default function Home() {
       {/* Footer Minimalista */}
       <footer className="w-full max-w-7xl mx-auto mt-24 px-6 py-12 border-t border-zinc-100 dark:border-zinc-800/50 flex flex-col items-center text-center z-10 relative">
         <p className="text-zinc-400 dark:text-zinc-600 text-sm font-medium">© 2026 TramaWeb. Feito para leitores.</p>
-        <div className="flex gap-6 mt-4 text-xs font-bold uppercase tracking-widest text-zinc-300 dark:text-zinc-700">
+        <div className="flex flex-wrap gap-4 md:gap-6 mt-4 text-xs font-bold uppercase tracking-widest text-zinc-300 dark:text-zinc-700 justify-center">
+          <Link href="/about" className="hover:text-brand-blue transition-colors">Sobre</Link>
+          <Link href="/contact" className="hover:text-brand-blue transition-colors">Contato</Link>
+          <Link href="/faq" className="hover:text-brand-blue transition-colors">FAQ</Link>
           <Link href="/privacy" className="hover:text-brand-blue transition-colors">Privacidade</Link>
           <Link href="/terms" className="hover:text-brand-blue transition-colors">Termos</Link>
         </div>
