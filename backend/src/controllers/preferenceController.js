@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../shared/database');
 
 const savePreferences = async (req, res) => {
     const { userId, generos, temas, frequencia } = req.body;

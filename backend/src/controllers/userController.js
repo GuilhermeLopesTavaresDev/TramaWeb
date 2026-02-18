@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../shared/database');
 
 const register = async (req, res) => {
     const { nome, email, senha } = req.body;

@@ -1,32 +1,12 @@
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
-
-// Configuração da pasta de uploads (Fora do repositório em produção)
-console.log('--- DIAGNÓSTICO DE ARMAZENAMENTO ---');
-const EXTERNAL_PATH = '/var/www/uploads';
-const LOCAL_PATH = path.join(__dirname, '../../uploads');
-
-// Se a pasta externa existir, usa ela. Caso contrário, usa a local.
-const uploadDir = fs.existsSync(EXTERNAL_PATH) ? EXTERNAL_PATH : LOCAL_PATH;
-
-console.log('Caminho de Upload Ativo:', uploadDir);
-
-if (!fs.existsSync(uploadDir)) {
-    console.log('Criando pasta:', uploadDir);
-    try {
-        fs.mkdirSync(uploadDir, { recursive: true });
-    } catch (err) {
-    }
-}
-console.log('-----------------------------------');
+const storageProvider = require('../shared/infra/storage');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, uploadDir);
+        cb(null, storageProvider.uploadDir);
     },
     filename: (req, file, cb) => {
-        // Nome único para evitar conflitos: timestamp-nomeoriginal
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }

@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('../shared/database');
 
 const securityController = {
     async blockUser(req, res) {
