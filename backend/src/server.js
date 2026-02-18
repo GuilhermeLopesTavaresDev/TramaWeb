@@ -18,7 +18,8 @@ const io = new Server(server, {
     path: '/socket.io'
 });
 
-const chatController = require('./controllers/chatController');
+const chatService = require('./modules/chat/service');
+const feedService = require('./modules/feed/service'); // Initializes event listeners
 const privateChatController = require('./controllers/privateChatController');
 const PORT = process.env.PORT || 3001;
 
@@ -77,7 +78,7 @@ io.on('connection', (socket) => {
     socket.on('send_message', async (data) => {
         const { bookId, usuarioId, conteudo } = data;
         try {
-            const savedMessage = await chatController.saveMessage(bookId, usuarioId, conteudo);
+            const savedMessage = await chatService.saveMessage(bookId, usuarioId, conteudo);
             io.to(bookId).emit('receive_message', savedMessage);
         } catch (error) {
             console.error('Erro ao processar mensagem socket:', error);
